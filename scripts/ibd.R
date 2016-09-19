@@ -7,6 +7,7 @@
 #install.packages("adegenet")
 library("adegenet")
 library("hierfstat")
+source(file = "functions/apodemia-functions.R")
 
 ################################################################################
 # Load structure file to genind object
@@ -40,78 +41,20 @@ apo.str.genind <- read.structure(file = "data/Apodemia_0.9-noDockweiler-GNPSK.st
 #' @pop: population of each individual (group size range: 4-12)
 #' @other: a list containing: X 
 
-apo.str.summary <- summary(apo.str.genind)
-start <- Sys.time()
-pairwise.fst <- genet.dist(apo.str.genind, method = "WC84") # ~10.5 minutes
-end <- Sys.time()
-total.time <- end - start
-total.time
-save(pairwise.fst, file = "output/pairwise-fst-Apodemia_0.9-noDockweiler-GNPSK.RData")
-
-
-source(file = "functions/apodemia-functions.R")
+# Calculate pairwise Fsts, or just load the file
+# start <- Sys.time()
+# pairwise.fst <- genet.dist(apo.str.genind, method = "WC84") # ~10.5 minutes
+# end <- Sys.time()
+# total.time <- end - start
+# total.time
+# save(pairwise.fst, file = "output/pairwise-fst-Apodemia_0.9-noDockweiler-GNPSK.RData")
+load(file = "output/pairwise-fst-Apodemia_0.9-noDockweiler-GNPSK.RData")
 
 localities <- FormatLocalities(file = "data/Apo_localities.txt",
                                genind = apo.str.genind, 
                                omit = c("Dockweiler", "GrasslandsNPSK"))
 
 geo.dist <- GeoDistances(localities = localities)
-
-  
-
-
-# For isolation by distance, need a distance matrix among populations.
-# Need a data.frame with lat/long (decimal degrees) and population numbers
-# pop.name  pop.number  latitude  longitude
-localities <- read.delim(file = "data/Apo_localities.txt", header = TRUE)
-
-# Take out Dockweiler & Grasslands populations
-localities <- localities[-which(localities$pop.name %in% c("Dockweiler", "GrasslandsNPSK")), ]
-
-# Need to re-number populations in localities to match their numbers in apo.df
-apo.localities <- data.frame(pop.name = rownames(apo.str.genind@tab), pop.number = apo.str.genind@pop)
-apo.localities$pop.name <- gsub("_[0-9A-Za-z]+", "", apo.localities$pop.name)
-apo.localities <- apo.localities[order(apo.localities$pop.name), ]
-apo.localities <- apo.localities[match(unique(apo.localities$pop.name), apo.localities$pop.name), ]
-
-# Sanity check
-if (nrow(localities) != nrow(apo.localities)) {
-  stop("Different number of localities in data frames")
-}
-
-# Drop the pop.number column, as we'll replace it with a merge
-localities <- localities[, -which(colnames(localities) == "pop.number")]
-localities <- merge(x = localities, y = apo.localities, by = "pop.name")
-
-# MUST have these in same order as p.fst matrix...could do this better
-localities <- localities[order(localities$pop.number), ]
-rownames(localities) <- NULL
-
-geo.dist <- matrix(data = NA, nrow = nrow(localities), ncol = nrow(localities))
-colnames(geo.dist) <- localities$pop.number[1:length(localities$pop.number)]
-rownames(geo.dist) <- localities$pop.number[1:length(localities$pop.number)]
-
-for (i in 1:(length(localities$latitude) - 1)) {
-  lat1 <- localities$latitude[i]
-  long1 <- localities$longitude[i]
-  for (j in (i + 1):length(localities$latitude)) {
-    lat2 <- localities$latitude[j]
-    long2 <- localities$longitude[j]
-    d <- Haversine(lat1 = lat1, long1 = long1, lat2 = lat2, long2 = long2)
-    geo.dist[j, i] <- d
-  }
-}
-
-rm(d, i, j, lat1, long1, lat2, long2)
-
-geo.dist <- as.dist(geo.dist)
-# Checking work NOTE: indexes do not equal population number!!!
-# HullMtn to Borrego
-# Haversine(localities$latitude[1], localities$longitude[1], localities$latitude[4], localities$longitude[4])
-# 915.8865
-# HullMtn to Ladoga
-# Haversine(localities$latitude[1], localities$longitude[1], localities$latitude[6], localities$longitude[6])
-# 76.89984
 
 # Mantel tests
 # Want Fst/(1 - Fst) as our differentiation matrix
