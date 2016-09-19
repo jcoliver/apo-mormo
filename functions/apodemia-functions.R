@@ -38,6 +38,9 @@ Haversine <- function(lat1, long1, lat2, long2) {
   return(d) # Distance in km
 }
 
+################################################################################
+#' Haversine formula for great circle distances
+#' 
 FormatLocalities <- function(file, sep = "\t", genind, omit = c()) {
   localities <- read.table(file = file, sep = sep, header = TRUE)
   if (is.null(localities$pop.name)) {
@@ -45,7 +48,7 @@ FormatLocalities <- function(file, sep = "\t", genind, omit = c()) {
   }
   
   if (length(omit) > 0) {
-    localities <- localities[-which(localities$pop.name %in% omit()), ]
+    localities <- localities[-which(localities$pop.name %in% omit), ]
   }
   
   genind.localities <- data.frame(pop.name = rownames(genind@tab), 
@@ -68,7 +71,7 @@ FormatLocalities <- function(file, sep = "\t", genind, omit = c()) {
 }
 
 ################################################################################
-#' Prepare localities dataframe for geographic distances
+#' Calculate pairwise geographic distance matrix
 #' 
 GeoDistances <- function(localities) {
   if (is.null(localities$latitude) || is.null(localities$longitude)) {
