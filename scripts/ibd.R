@@ -49,9 +49,16 @@ total.time
 save(pairwise.fst, file = "output/pairwise-fst-Apodemia_0.9-noDockweiler-GNPSK.RData")
 
 
-
-
 source(file = "functions/apodemia-functions.R")
+
+localities <- FormatLocalities(file = "data/Apo_localities.txt",
+                               genind = apo.str.genind, 
+                               omit = c("Dockweiler", "GrasslandsNPSK"))
+
+geo.dist <- GeoDistances(localities = localities)
+
+  
+
 
 # For isolation by distance, need a distance matrix among populations.
 # Need a data.frame with lat/long (decimal degrees) and population numbers
