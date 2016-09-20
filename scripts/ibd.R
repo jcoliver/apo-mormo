@@ -4,9 +4,11 @@
 # 2016-09-06
 
 #install.packages("hierfstat")
+library("hierfstat")
 #install.packages("adegenet")
 library("adegenet")
-library("hierfstat")
+#install.packages("vegan")
+library("vegan")
 source(file = "functions/apodemia-functions.R")
 
 ################################################################################
@@ -65,8 +67,6 @@ p.fst <- pairwise.fst/(1 - pairwise.fst)
 # say base-10, so we go with that
 geo.dist <- log(x = geo.dist, base = 10)
 
-# install.packages("vegan")
-library("vegan")
 ibd <- mantel(xdis = geo.dist, ydis = p.fst, method = "pearson", permutations = 1000, parallel = 1) # parallel = getOption("mc.cores")
 # Mantel statistic based on Pearson's product-moment correlation 
 # 
@@ -100,17 +100,6 @@ ibd.ns <- mantel.partial(xdis = north.south, ydis = p.fst, zdis = geo.dist, meth
 # 0.200 0.271 0.324 0.358 
 # Permutation: free
 # Number of permutations: 1000
-
-# Plotting distance vs. Fst (both transformed)
-# Coloring comparisons with North vs. South black
-cols <- north.south
-cols[cols == 0] <- "white"
-cols[cols == 1] <- "black"
-date.filename <- format(Sys.Date(), "%Y-%m-%d")
-pdf(file = paste0("output/Apo-ibd-ns-graph-", date.filename, ".pdf"), useDingbats = FALSE)
-plot(x = geo.dist, y = p.fst, col = "black", pch = 21, bg = cols, xlab = "Log(distance)", ylab = "Fst/1 - Fst")
-abline(lm(p.fst ~ geo.dist))
-dev.off()
 
 # Partial Mantel to see if langei difference is beyond IBD
 langei <- "langei"
