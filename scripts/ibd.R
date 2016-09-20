@@ -84,20 +84,8 @@ ibd <- mantel(xdis = geo.dist, ydis = p.fst, method = "pearson", permutations = 
 
 # Partial Mantel to see if North-South difference is beyond IBD
 south.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego")
-south <- which(localities$pop.name %in% south.names)
-north.south <- matrix(data = NA, nrow = nrow(localities), ncol = nrow(localities))
-for (i in 1:nrow(localities) - 1) {
-  for (j in 1:nrow(localities)) {
-    d <- 0
-    if ((i %in% south && !(j %in% south)) 
-        || (j %in% south && !(i %in% south))){
-      d <- 1
-    }
-    north.south[j, i] <- d
-  }
-}
-rm(i, j, d)
-north.south <- as.dist(north.south)
+north.south <- IndicatorMatrix(pop.set = south.names, localities = localities)
+
 ibd.ns <- mantel.partial(xdis = north.south, ydis = p.fst, zdis = geo.dist, method = "pearson", permutations = 1000, parallel = 1)
 # Partial Mantel statistic based on Pearson's product-moment correlation 
 # 
