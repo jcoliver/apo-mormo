@@ -66,6 +66,7 @@ FormatLocalities <- function(file, sep = "\t", genind, omit = c()) {
   localities <- merge(x = localities, y = genind.localities, by = "pop.name")
   
   localities <- localities[order(localities$pop.number), ]
+  localities$pop.number <- as.integer(as.character(localities$pop.number))
   rownames(localities) <- NULL
   return(localities)
 }
