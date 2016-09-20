@@ -111,8 +111,13 @@ IndicatorMatrix <- function(pop.set, localities) {
     stop("Required 'pop.name' vector missing from localities object.")
   }
   
+  if (is.null(localities$pop.number)) {
+    stop("Required 'pop.number' vector missing from localities object.")
+  }
+  
   to.mark <- which(localities$pop.name %in% pop.set)
   indicator.matrix <- matrix(data = NA, nrow = nrow(localities), ncol = nrow(localities))
+  rownames(indicator.matrix) <- colnames(indicator.matrix) <- localities$pop.number
   for (i in 1:nrow(localities) - 1) {
     for (j in 1:nrow(localities)) {
       d <- 0
