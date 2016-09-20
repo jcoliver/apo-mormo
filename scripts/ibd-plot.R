@@ -32,39 +32,51 @@ geo.dist <- GeoDistances(localities = localities)
 p.fst <- pairwise.fst/(1 - pairwise.fst)
 geo.dist <- log(x = geo.dist, base = 10)
 
+################################################################################
+# Identify south populations for coloring each type of comparison
+# dot.colors will ultimately have three possible values:
+# "white" for north-north
+# "black" for south-south
+# "red" for north-south
+# Note there is some funkiness because the distance matrices are have 
+# number of rows & columns equal to the number of localities minus one;
+# these distance matrices have columns corresponding to populations 1 through 
+# n - 1 (where n is the number of populations) and rows corresponding to 
+# populations 2 through n.
 south.pop.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego")
-south.pop.numbers <- as.integer(localities$pop.number[which(localities$pop.name %in% south.pop.names)])
-dot.colors <- matrix(data = 0, nrow = nrow(localities), ncol = nrow(localities))
-rownames(dot.colors) <- colnames(dot.colors) <- localities$pop.number
-dot.colors <- as.dist(dot.colors)
+south.pop.numbers <- localities$pop.number[which(localities$pop.name %in% south.pop.names)]
+dot.colors <- matrix(data = "purple", nrow = nrow(localities) - 1, ncol = nrow(localities) - 1)
+rownames(dot.colors) <- localities$pop.number[2:length(localities$pop.number)]
+colnames(dot.colors) <- localities$pop.number[1:(length(localities$pop.num) - 1)]
 
+# Loop over row/columns to categorize comparison and assign appropriate color
+for (i in 1:nrow(dot.colors)) {
+  for (j in 1:i) {
+    locality.i <- i + 1
+    locality.j <- j
 
-for (i in 1:(nrow(localities) - 1)) {
-  for (j in 1: nrow(localities)) {
-    d <- 1
-    if (localities$pop.number[i] %in% south.pop.numbers
-        && localities$pop.number[j] %in% south.pop.numbers) {
-      
+    locality.i.number <- localities$pop.number[locality.i]
+    locality.j.number <- localities$pop.number[locality.j]
+    
+    d <- "red"
+    if (locality.i.number %in% south.pop.numbers
+        && locality.j.number %in% south.pop.numbers) { # both south
+      d <- "black"
+    } else if (!(locality.i.number %in% south.pop.numbers)
+               && !(locality.j.number %in% south.pop.numbers)) { # both NOT south, so north-north
+      d <- "white"
     }
+    dot.colors[i, j] <- d
   }
 }
 
-north <- c()
-south <- c()
+# We only want the elements from the lower triangle of the matrix (diagonal included)
+dot.tri <- lower.tri(x = dot.colors, diag = TRUE)
+dot.colors.lower <- dot.colors[dot.tri]
 
-
-
-
-south.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego")
-
-# Plotting distance vs. Fst (both transformed)
-# Coloring comparisons with North vs. South black
-cols <- north.south
-cols[cols == 0] <- "white"
-cols[cols == 1] <- "black"
+# Plot to a file
 date.filename <- format(Sys.Date(), "%Y-%m-%d")
-pdf(file = paste0("output/Apo-ibd-ns-graph-", date.filename, ".pdf"), useDingbats = FALSE)
-plot(x = geo.dist, y = p.fst, col = "black", pch = 21, bg = cols, xlab = "Log(distance)", ylab = "Fst/1 - Fst")
+pdf(file = paste0("output/Apo-ibd-plot-", date.filename, ".pdf"), useDingbats = FALSE)
+plot(x = geo.dist, y = p.fst, col = "black", pch = 21, bg = dot.colors.lower, xlab = "Log(distance)", ylab = "Fst/1 - Fst")
 abline(lm(p.fst ~ geo.dist))
 dev.off()
-
