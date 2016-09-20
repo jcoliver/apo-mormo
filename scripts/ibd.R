@@ -112,3 +112,20 @@ plot(x = geo.dist, y = p.fst, col = "black", pch = 21, bg = cols, xlab = "Log(di
 abline(lm(p.fst ~ geo.dist))
 dev.off()
 
+# Partial Mantel to see if langei difference is beyond IBD
+langei <- "langei"
+langei.indicator <- IndicatorMatrix(pop.set = langei, localities = localities)
+ibd.langei <- mantel.partial(xdis = langei.indicator, ydis = p.fst, zdis = geo.dist, method = "pearson", permutations = 1000, parallel = 1)
+# Partial Mantel statistic based on Pearson's product-moment correlation 
+# 
+# Call:
+# mantel.partial(xdis = langei.indicator, ydis = p.fst, zdis = geo.dist,      method = "pearson", permutations = 1000, parallel = 1) 
+# 
+# Mantel statistic r: 0.4635 
+#       Significance: 0.15584 
+# 
+# Upper quantiles of permutations (null model):
+#   90%   95% 97.5%   99% 
+# 0.464 0.552 0.552 0.552 
+# Permutation: free
+# Number of permutations: 1000
