@@ -98,3 +98,31 @@ GeoDistances <- function(localities) {
   geo.dist <- as.dist(geo.dist)
   return(geo.dist)
 }
+
+################################################################################
+#' Generate an indicator matrix based on list of populations
+#' 
+IndicatorMatrix <- function(pop.set, localities) {
+  if (is.null(pop.set) || length(pop.set) < 1) {
+    stop("Object 'pop.set' empty or null; pop.set must include at least one population.")
+  }
+  
+  if (is.null(localities$pop.name)) {
+    stop("Required 'pop.name' vector missing from localities object.")
+  }
+  
+  to.mark <- which(localities$pop.name %in% pop.set)
+  indicator.matrix <- matrix(data = NA, nrow = nrow(localities), ncol = nrow(localities))
+  for (i in 1:nrow(localities) - 1) {
+    for (j in 1:nrow(localities)) {
+      d <- 0
+      if ((i %in% to.mark && !(j %in% to.mark)) 
+          || (j %in% to.mark && !(i %in% to.mark))) {
+        d <- 1
+      }
+      indicator.matrix[j, i] <- d
+    }
+  }
+  indicator.matrix <- as.dist(indicator.matrix)
+  return(indicator.matrix)
+}
