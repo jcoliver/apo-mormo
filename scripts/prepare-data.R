@@ -14,7 +14,7 @@
 
 ################################################################################
 # SETUP
-# Load dependancies & establish data files
+# Load dependancies & establish data and output files
 
 # Load dependancies
 #install.packages("adegenet")
