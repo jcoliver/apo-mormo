@@ -47,18 +47,19 @@ save(pairwise.fst, file = "output/pairwise-fst.RData")
 
 ################################################################################
 # GEOGRAPHICAL DATA
-# Read in localities file, reconcile it with populations included in STRUCTURE 
-# file, calculate geographic distance matrix, and save localities and 
-# geographic distance matrix to file
-
-
-
-# Read in localities file
+# Reconcile localities in file with populations included in STRUCTURE file, 
+# calculate geographic distance matrix, and save localities and geographic 
+# distance matrix to file
 
 # Reconcile localities with populations included in STRUCTURE file
+localities <- FormatLocalities(file = "data/Apo_localities.txt",
+                               genind = apo.str.genind, 
+                               omit = c("Dockweiler", "GrasslandsNPSK"))
 
 # Calculate geographic distance matrix
+geo.dist <- GeoDistances(localities = localities)
 
 # Save localities and geographic distance matrix to file
-
+save(localities, file = "output/reconciled-localities.RData")
+save(geo.dist, file = "output/pairwise-geo-dist.RData")
 
