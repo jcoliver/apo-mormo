@@ -3,36 +3,35 @@
 # jcoliver@email.arizona.edu
 # 2016-09-19
 
-#install.packages("adegenet")
-library("adegenet")
-source(file = "functions/apodemia-functions.R")
+################################################################################
+# SETUP
+# Establish data files
+pairwise.fst.file = "output/pairwise-fst.RData"
+localities.file = "output/reconciled-localities.RData"
+geo.dist.file = "output/pairwise-geo-dist.RData"
 
 ################################################################################
-# Load files & prep data
-apo.str.genind <- read.structure(file = "data/Apodemia_0.9-noDockweiler-GNPSK.str",
-                                 n.ind = 102,
-                                 n.loc = 4057,
-                                 onerowperind = TRUE,
-                                 col.lab = 1,
-                                 col.pop = 2,
-                                 col.others = 0,
-                                 row.marknames = 0,
-                                 NA.char = "-9",
-                                 sep = "\t")
-# Pairwise Fst matrix, see ibd.R
-load(file = "output/pairwise-fst-Apodemia_0.9-noDockweiler-GNPSK.RData")
+# DATA PREP
 
-localities <- FormatLocalities(file = "data/Apo_localities.txt",
-                               genind = apo.str.genind, 
-                               omit = c("Dockweiler", "GrasslandsNPSK"))
-
-geo.dist <- GeoDistances(localities = localities)
-
-# Transform distances for plot
+# Load pairwise Fst matrix
+load(file = pairwise.fst.file)
+# Want Fst/(1 - Fst) as our differentiation matrix
 p.fst <- pairwise.fst/(1 - pairwise.fst)
+
+# Load localities
+load(file = localities.file)
+
+# Load geographic distance matrix
+load(file = geo.dist.file)
+# Want log-transformed geographic distances, per Rousset 1997
+# Rousset does not explicitly mention the base of the log function, 
+# but http://bmcgenet.biomedcentral.com/articles/10.1186/1471-2156-6-13
+# say base-10, so we go with that
 geo.dist <- log(x = geo.dist, base = 10)
 
 ################################################################################
+# IBD PLOT
+
 # Identify south populations for coloring each type of comparison
 # dot.colors will ultimately have three possible values:
 # "white" for north-north
