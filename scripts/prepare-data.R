@@ -4,6 +4,15 @@
 # 2016-09-21
 
 ################################################################################
+# SUMMARY
+# * Reads in genetic data from a STRUCTURE-formatted file and calculates pairwise
+# Fst matrix. Saves the matrix to output folder
+# * Reads in locality data file, which includes latitude / longitude coordinates,
+# and reconciles it with the populations included in the STRUCTURE file. Then 
+# calculates pairwise geographic distance matrix and saves reconciled localities
+# and geographic distance matrix to output folder
+
+################################################################################
 # SETUP
 # Load dependancies & establish data files
 
@@ -16,7 +25,10 @@ source(file = "functions/apodemia-functions.R")
 
 # Establish data files
 str.file = "data/Apodemia_0.9-noDockweiler-GNPSK.str"
+fst.out.file = "output/pairwise-fst.RData"
 localities.file = "data/Apo_localities.txt"
+localities.out.file = "output/reconciled-localities.RData"
+geo.dist.out.file = "output/pairwise-geo-dist.RData"
 
 ################################################################################
 # GENETIC DATA
@@ -43,7 +55,7 @@ total.time <- end - start
 cat("Time to calculate pairwise Fst matrix: ", total.time, "\n", sep = "")
 
 # Save file
-save(pairwise.fst, file = "output/pairwise-fst.RData")
+save(pairwise.fst, file = fst.out.file)
 
 ################################################################################
 # GEOGRAPHICAL DATA
@@ -52,7 +64,7 @@ save(pairwise.fst, file = "output/pairwise-fst.RData")
 # distance matrix to file
 
 # Reconcile localities with populations included in STRUCTURE file
-localities <- FormatLocalities(file = "data/Apo_localities.txt",
+localities <- FormatLocalities(file = localities.file,
                                genind = apo.str.genind, 
                                omit = c("Dockweiler", "GrasslandsNPSK"))
 
@@ -60,6 +72,6 @@ localities <- FormatLocalities(file = "data/Apo_localities.txt",
 geo.dist <- GeoDistances(localities = localities)
 
 # Save localities and geographic distance matrix to file
-save(localities, file = "output/reconciled-localities.RData")
-save(geo.dist, file = "output/pairwise-geo-dist.RData")
+save(localities, file = localities.out.file)
+save(geo.dist, file = geo.dist.out.file)
 
