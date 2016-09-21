@@ -5,6 +5,7 @@
 
 ################################################################################
 # SUMMARY
+# Reads in pairwise Fst matrix and creates a boxplot for each population
 
 ################################################################################
 # SETUP
@@ -25,6 +26,8 @@ plot.file = "output/"
 
 ################################################################################
 # DATA PREP
+# Read in data & convert to long, re-level pop.name so populations are 
+# displayed in plot in decreasing latitude
 
 # Read in Fst data and convert to long format
 load(file = pairwise.fst.file)
@@ -42,9 +45,13 @@ fst.long <- merge(x = fst.long, y = localities, by = "pop.number")
 pop.name.levels <- localities$pop.name[order(localities$latitude, decreasing = TRUE)]
 fst.long$pop.name <- factor(fst.long$pop.name, levels = pop.name.levels)
 
-#boxplot(formula = fst ~ pop.number, data = fst.long)
+
+################################################################################
+# PLOT
+
 ggplot(data = fst.long, aes(pop.name, fst)) +
   geom_boxplot() +
+#  geom_jitter(position = position_dodge(width = 1)) +
   xlab(label = "Pop.") +
   ylab(label = "Fst") +
   theme(axis.text.x = element_text(angle = 60, hjust = 1))
