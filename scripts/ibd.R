@@ -25,6 +25,7 @@ source(file = "functions/apodemia-functions.R")
 pairwise.fst.file = "output/pairwise-fst.RData"
 localities.file = "output/reconciled-localities.RData"
 geo.dist.file = "output/pairwise-geo-dist.RData"
+ibd.results.file = "output/ibd-results.txt"
 
 ################################################################################
 # DATA PREP
@@ -48,6 +49,15 @@ geo.dist <- log(x = geo.dist, base = 10)
 ################################################################################
 # IBD ANALYSES
 
+# Setup results file
+sink(file = ibd.results.file, append = FALSE)
+cat("IBD Results", "\n", sep = "")
+cat(format.Date(Sys.Date(), "%Y-%m-%d"), "\n", sep = "")
+cat("Fst file: ", pairwise.fst.file, "\n", sep = "")
+cat("Localities file: ", pairwise.fst.file, "\n", sep = "")
+cat("Geographic distances file: ", geo.dist.file, "\n", sep = "")
+sink()
+
 ########################################
 # IBD
 ibd <- mantel(xdis = geo.dist, 
@@ -55,6 +65,11 @@ ibd <- mantel(xdis = geo.dist,
               method = "pearson", 
               permutations = 1000, 
               parallel = 1)
+# IBD result
+sink(file = ibd.results.file, append = TRUE)
+cat("\nIBD Mantel", sep = "")
+ibd
+sink()
 
 ########################################
 # Partial Mantel to see if North-South difference is beyond IBD
@@ -68,6 +83,11 @@ ibd.ns <- mantel.partial(xdis = north.south,
                          permutations = 1000, 
                          parallel = 1)
 
+sink(file = ibd.results.file, append = TRUE)
+cat("\n--------------------------------------------------------------------------------")
+cat("\nIBD partial Mantel North-South", sep = "")
+ibd.ns
+sink()
 
 ########################################
 # Partial Mantel to see if langei difference is beyond IBD
@@ -80,6 +100,11 @@ ibd.langei <- mantel.partial(xdis = langei.indicator,
                              permutations = 1000, 
                              parallel = 1)
 
+sink(file = ibd.results.file, append = TRUE)
+cat("\n--------------------------------------------------------------------------------")
+cat("\nIBD partial Mantel langei", sep = "")
+ibd.langei
+sink()
 
 
 localities <- FormatLocalities(file = "data/Apo_localities.txt",
