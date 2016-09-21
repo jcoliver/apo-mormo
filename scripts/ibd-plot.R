@@ -83,10 +83,8 @@ dev.off()
 
 ################################################################################
 # Plot with langei as different color dot
-# Identify south populations for coloring each type of comparison
-# dot.colors will ultimately have three possible values:
 # "white" for most
-# "black" for langei-other
+# "black" for langei-north & langei-south
 langei.pop.name <- "langei"
 langei.pop.number <- localities$pop.number[which(localities$pop.name %in% langei.pop.name)]
 langei.colors <- matrix(data = "purple", nrow = nrow(localities) - 1, ncol = nrow(localities) - 1)
