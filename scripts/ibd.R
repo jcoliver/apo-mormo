@@ -3,54 +3,84 @@
 # jcoliver@email.arizona.edu
 # 2016-09-06
 
-#install.packages("hierfstat")
-library("hierfstat")
-#install.packages("adegenet")
-library("adegenet")
+################################################################################
+# SUMMARY
+# * Reads in fst and geographic distance matrices, as well as localities object
+# * Performs isolation by distance Mantel test
+# * Performs partial Mantel test for differentiation between north and south 
+# populations after conrolling for IBD
+# * Performs partial Mantel test for differentiation of langei from remaining 
+# populations after controlling for IBD
+
+################################################################################
+# SETUP
+# Load dependancies & establish data files
+
+# Load dependancies
 #install.packages("vegan")
 library("vegan")
 source(file = "functions/apodemia-functions.R")
 
-################################################################################
-# Load structure file to genind object
-apo.str.genind <- read.structure(file = "data/Apodemia_0.9-noDockweiler-GNPSK.str",
-                                 n.ind = 102,
-                                 n.loc = 4057,
-                                 onerowperind = TRUE,
-                                 col.lab = 1,
-                                 col.pop = 2,
-                                 col.others = 0,
-                                 row.marknames = 0,
-                                 NA.char = "-9",
-                                 sep = "\t")
-#' /// GENIND OBJECT /////////
-#'   
-#'   // 102 individuals; 4,057 loci; 7,808 alleles; size: 4.8 Mb
-#' 
-#' // Basic content
-#' @tab:  102 x 7808 matrix of allele counts
-#' @loc.n.all: number of alleles per locus (range: 1-2)
-#' @loc.fac: locus factor for the 7808 columns of @tab
-#' @all.names: list of allele names for each locus
-#' @ploidy: ploidy of each individual  (range: 2-2)
-#' @type:  codom
-#' @call: read.structure(file = "data/Apodemia_0.9-noDockweiler-GNPSK.str", 
-#'                       n.ind = 102, n.loc = 4057, onerowperind = TRUE, col.lab = 1, 
-#'                       col.pop = 2, col.others = 0, row.marknames = 0, NA.char = "-9", 
-#'                       sep = "\t")
-#' 
-#' // Optional content
-#' @pop: population of each individual (group size range: 4-12)
-#' @other: a list containing: X 
+# Establish data files
+pairwise.fst.file = "output/pairwise-fst.RData"
+localities.file = "output/reconciled-localities.RData"
+geo.dist.file = "output/pairwise-geo-dist.RData"
 
-# Calculate pairwise Fsts, or just load the file
-# start <- Sys.time()
-# pairwise.fst <- genet.dist(apo.str.genind, method = "WC84") # ~10.5 minutes
-# end <- Sys.time()
-# total.time <- end - start
-# total.time
-# save(pairwise.fst, file = "output/pairwise-fst-Apodemia_0.9-noDockweiler-GNPSK.RData")
-load(file = "output/pairwise-fst-Apodemia_0.9-noDockweiler-GNPSK.RData")
+################################################################################
+# DATA PREP
+
+# Load pairwise Fst matrix
+load(file = pairwise.fst.file)
+# Want Fst/(1 - Fst) as our differentiation matrix
+p.fst <- pairwise.fst/(1 - pairwise.fst)
+
+# Load localities
+load(file = localities.file)
+
+# Load geographic distance matrix
+load(file = geo.dist.file)
+# Want log-transformed geographic distances, per Rousset 1997
+# Rousset does not explicitly mention the base of the log function, 
+# but http://bmcgenet.biomedcentral.com/articles/10.1186/1471-2156-6-13
+# say base-10, so we go with that
+geo.dist <- log(x = geo.dist, base = 10)
+
+################################################################################
+# IBD ANALYSES
+
+########################################
+# IBD
+ibd <- mantel(xdis = geo.dist, 
+              ydis = p.fst, 
+              method = "pearson", 
+              permutations = 1000, 
+              parallel = 1)
+
+########################################
+# Partial Mantel to see if North-South difference is beyond IBD
+south.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego")
+north.south <- IndicatorMatrix(pop.set = south.names, localities = localities)
+
+ibd.ns <- mantel.partial(xdis = north.south, 
+                         ydis = p.fst, 
+                         zdis = geo.dist, 
+                         method = "pearson", 
+                         permutations = 1000, 
+                         parallel = 1)
+
+
+########################################
+# Partial Mantel to see if langei difference is beyond IBD
+langei <- "langei"
+langei.indicator <- IndicatorMatrix(pop.set = langei, localities = localities)
+ibd.langei <- mantel.partial(xdis = langei.indicator, 
+                             ydis = p.fst, 
+                             zdis = geo.dist, 
+                             method = "pearson", 
+                             permutations = 1000, 
+                             parallel = 1)
+
+
 
 localities <- FormatLocalities(file = "data/Apo_localities.txt",
                                genind = apo.str.genind, 
