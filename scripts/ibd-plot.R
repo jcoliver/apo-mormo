@@ -4,6 +4,14 @@
 # 2016-09-19
 
 ################################################################################
+# SUMMARY
+# * Reads in fst and geographic distance matrices, as well as localities object
+# * Creates scatterplot of distance vs. Fst, coloring points based on the 
+# comparison (north-north, south-south, and north-south)
+# * Creates scatterplot of distance vs. Fst, coloring all comparisons with 
+# langei population different from remaining comparisons
+
+################################################################################
 # SETUP
 # Establish data files
 pairwise.fst.file = "output/pairwise-fst.RData"
