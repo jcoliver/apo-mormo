@@ -80,3 +80,47 @@ pdf(file = paste0("output/Apo-ibd-plot-", date.filename, ".pdf"), useDingbats = 
 plot(x = geo.dist, y = p.fst, col = "black", pch = 21, bg = dot.colors.lower, xlab = "Log(distance)", ylab = "Fst/1 - Fst")
 abline(lm(p.fst ~ geo.dist))
 dev.off()
+
+################################################################################
+# Plot with langei as different color dot
+# Identify south populations for coloring each type of comparison
+# dot.colors will ultimately have three possible values:
+# "white" for most
+# "black" for langei-other
+langei.pop.name <- "langei"
+langei.pop.number <- localities$pop.number[which(localities$pop.name %in% langei.pop.name)]
+langei.colors <- matrix(data = "purple", nrow = nrow(localities) - 1, ncol = nrow(localities) - 1)
+rownames(langei.colors) <- localities$pop.number[2:length(localities$pop.number)]
+colnames(langei.colors) <- localities$pop.number[1:(length(localities$pop.num) - 1)]
+
+# Loop over row/columns to categorize comparison and assign appropriate color
+for (i in 1:nrow(langei.colors)) {
+  for (j in 1:i) {
+    locality.i <- i + 1
+    locality.j <- j
+    
+    locality.i.number <- localities$pop.number[locality.i]
+    locality.j.number <- localities$pop.number[locality.j]
+    
+    d <- "white"
+    if ((locality.i.number %in% langei.pop.number
+        && !(locality.j.number %in% langei.pop.number))
+        || (locality.j.number %in% langei.pop.number
+          && !(locality.i.number %in% langei.pop.number))){
+      d <- "black"
+    }
+    langei.colors[i, j] <- d
+  }
+}
+
+# Pull out lower triangle of the matrix (diagonal included)
+langei.tri <- lower.tri(x = langei.colors, diag = TRUE)
+langei.colors.lower <- langei.colors[langei.tri]
+
+# Plot to a file
+date.filename <- format(Sys.Date(), "%Y-%m-%d")
+pdf(file = paste0("output/Apo-ibd-plot-langei-", date.filename, ".pdf"), useDingbats = FALSE)
+plot(x = geo.dist, y = p.fst, col = "black", pch = 21, bg = langei.colors.lower, xlab = "Log(distance)", ylab = "Fst/1 - Fst")
+abline(lm(p.fst ~ geo.dist))
+dev.off()
+
