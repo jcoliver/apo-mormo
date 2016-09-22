@@ -22,7 +22,8 @@ library("ggplot2")
 pairwise.fst.file = "output/pairwise-fst.RData"
 localities.file = "output/reconciled-localities.RData"
 
-plot.file = "output/"
+date.filename <- format(Sys.Date(), "%Y-%m-%d")
+plot.file = paste0("output/fst-boxplot-", date.filename, ".pdf", sep = "")
 
 ################################################################################
 # DATA PREP
@@ -49,10 +50,11 @@ fst.long$pop.name <- factor(fst.long$pop.name, levels = pop.name.levels)
 ################################################################################
 # PLOT
 
-ggplot(data = fst.long, aes(pop.name, fst)) +
-  geom_boxplot() +
-#  geom_jitter(position = position_dodge(width = 1)) +
-  xlab(label = "Pop.") +
-  ylab(label = "Fst") +
-  theme(axis.text.x = element_text(angle = 60, hjust = 1))
-
+pdf(file = plot.file, useDingbats = FALSE)
+  ggplot(data = fst.long, aes(pop.name, fst)) +
+    geom_boxplot() +
+  #  geom_jitter(position = position_dodge(width = 1)) +
+    xlab(label = "Population") +
+    ylab(label = "Fst") +
+    theme(axis.text.x = element_text(angle = 60, hjust = 1))
+dev.off()
