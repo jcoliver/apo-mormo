@@ -25,6 +25,7 @@ source(file = "functions/apodemia-functions.R")
 
 # Establish data files
 str.file = "data/Apodemia_0.9-noDockweiler-GNPSK.str"
+genind.out.file = "output/genind-object.RData"
 fst.out.file = "output/pairwise-fst.RData"
 localities.file = "data/Apo_localities.txt"
 localities.out.file = "output/reconciled-localities.RData"
@@ -46,6 +47,8 @@ apo.str.genind <- read.structure(file = str.file,
                                  row.marknames = 0,
                                  NA.char = "-9",
                                  sep = "\t")
+
+save(apo.str.genind, file = genind.out.file)
 
 # Calculate pairwise Fst matrix
 start <- Sys.time()
