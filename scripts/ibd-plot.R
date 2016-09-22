@@ -13,10 +13,12 @@
 
 ################################################################################
 # SETUP
-# Establish data files
+# Establish data files and constants
 pairwise.fst.file = "output/pairwise-fst.RData"
 localities.file = "output/reconciled-localities.RData"
 geo.dist.file = "output/pairwise-geo-dist.RData"
+
+date.filename <- format(Sys.Date(), "%Y-%m-%d")
 
 ################################################################################
 # DATA PREP
@@ -82,10 +84,15 @@ dot.tri <- lower.tri(x = dot.colors, diag = TRUE)
 dot.colors.lower <- dot.colors[dot.tri]
 
 # Plot to a file
-date.filename <- format(Sys.Date(), "%Y-%m-%d")
 pdf(file = paste0("output/Apo-ibd-plot-", date.filename, ".pdf"), useDingbats = FALSE)
-plot(x = geo.dist, y = p.fst, col = "black", pch = 21, bg = dot.colors.lower, xlab = "Log(distance)", ylab = "Fst/1 - Fst")
-abline(lm(p.fst ~ geo.dist))
+  plot(x = geo.dist, 
+       y = p.fst, 
+       col = "black", 
+       pch = 21, 
+       bg = dot.colors.lower, 
+       xlab = "Log(distance)", 
+       ylab = "Fst/1 - Fst")
+  abline(lm(p.fst ~ geo.dist))
 dev.off()
 
 ################################################################################
@@ -123,9 +130,13 @@ langei.tri <- lower.tri(x = langei.colors, diag = TRUE)
 langei.colors.lower <- langei.colors[langei.tri]
 
 # Plot to a file
-date.filename <- format(Sys.Date(), "%Y-%m-%d")
 pdf(file = paste0("output/Apo-ibd-plot-langei-", date.filename, ".pdf"), useDingbats = FALSE)
-plot(x = geo.dist, y = p.fst, col = "black", pch = 21, bg = langei.colors.lower, xlab = "Log(distance)", ylab = "Fst/1 - Fst")
-abline(lm(p.fst ~ geo.dist))
+  plot(x = geo.dist, 
+       y = p.fst, 
+       col = "black", 
+       pch = 21, 
+       bg = langei.colors.lower, 
+       xlab = "Log(distance)", 
+       ylab = "Fst/1 - Fst")
+  abline(lm(p.fst ~ geo.dist))
 dev.off()
-
