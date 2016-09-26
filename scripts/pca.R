@@ -5,6 +5,10 @@
 
 ################################################################################
 # SUMMARY
+# * Reads in genetic data from genind object; also reads in locality information
+# for plot coloring purposes
+# * Performs Principal Components Analysis (PCA) on allele frequency data
+# * Plots first three axes of PCA (1 & 2 in one plot, 2 & 3 in a second plot)
 
 ################################################################################
 # SETUP
@@ -14,20 +18,12 @@
 library("adegenet")
 
 # Establish data files
-str.file = "data/Apodemia_0.9-noDockweiler-GNPSK.str"
+genind.file = "output/genind-object.RData"
 localities.file = "output/reconciled-localities.RData"
+plot.out.file = "output/pca-plots.pdf"
 
-# Read in STRUCTURE file
-apo.str.genind <- read.structure(file = str.file,
-                                 n.ind = 102,
-                                 n.loc = 4057,
-                                 onerowperind = TRUE,
-                                 col.lab = 1,
-                                 col.pop = 2,
-                                 col.others = 0,
-                                 row.marknames = 0,
-                                 NA.char = "-9",
-                                 sep = "\t")
+# Read in genind file
+load(file = genind.file)
 
 # Extract allele frequency data, replacing NA values with mean allele 
 # frequencies (mean across individuals of all populations)
