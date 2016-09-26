@@ -3,7 +3,7 @@
 # jcoliver@email.arizona.edu
 # 2016-09-22
 
-# INCOMPLETE
+# INCOMPLETE - considerable variation in results among runs of `find.clusters`
 
 # install.packages("adegenet")
 library("adegenet")
