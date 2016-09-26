@@ -45,32 +45,42 @@ allele.pca <- dudi.pca(df = allele.data,
 load(file = localities.file)
 pop.nums <- pop(apo.str.genind)
 
+# Lots of work to give south populations range of red colors and north 
+# populations a range of blue colors
+
+# Identify north and south population numbers
 south.pop.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego")
 south.pop.nums <- localities$pop.number[which(localities$pop.name %in% south.pop.names)]
+north.pop.nums <- localities$pop.number[-which(localities$pop.name %in% south.pop.names)]
 
+# Generate palettes for north and south populations
+south.color.endpoints <- c("#00c4c4", "#428282")
+south.colors <- colorRampPalette(colors = south.color.endpoints)(length(south.pop.nums))
+north.color.endpoints <- c("#DF0000", "#7C3737")
+north.colors <- colorRampPalette(colors = north.color.endpoints)(length(north.pop.nums))
+col.vector <- c(south.colors, north.colors)
 
-group2 <- which(localities$pop.name %in% group2.names)
+################################################################################
+# Use population number as element names in col.vector so we can re-order the 
+# elements in col.vector based on levels in the pop.vector; necessary so the 
+# populations are actually colored as we expect them to be
+names(col.vector) <- c(south.pop.nums, north.pop.nums)
+col.vector <- col.vector[levels(pop.nums)]
 
-
-pop.vector <- pop(apo.str.genind)
-
-
-col.vector <- funky(15)
-
-point.cols <- rep(x = "#B21212FF", times = nrow(localities)) # a dark red for north populations
-point.cols[group2] <- "#12B2B2FF" # "cadetblue" for south populations
-
+# Open pdf device and send plots
+pdf(file = plot.out.file, useDingbats = FALSE)
+par(mfrow = c(2,1))
 
 # Plot first two axes
 xaxis <- 1
 yaxis <- 2
 s.class(dfxy = allele.pca$li, 
-        fac = pop(apo.str.genind), 
+        fac = pop.nums, 
         xax = xaxis, 
         yax = yaxis, 
-        col = funky(15),
+        col = col.vector,
         clabel = 0.6)
-add.scatter.eig(w = allele.pca$eig[1:50], 
+add.scatter.eig(w = allele.pca$eig[1:20], 
                 nf = 3, 
                 xax = xaxis, 
                 yax = yaxis, 
@@ -80,17 +90,18 @@ add.scatter.eig(w = allele.pca$eig[1:50],
 xaxis <- 2
 yaxis <- 3
 s.class(dfxy = allele.pca$li, 
-        fac = pop(apo.str.genind), 
+        fac = pop.nums, 
         xax = xaxis, 
         yax = yaxis, 
-        col = funky(15),
+        col = col.vector,
         clabel = 0.6)
-add.scatter.eig(w = allele.pca$eig[1:50], 
+add.scatter.eig(w = allele.pca$eig[1:20], 
                 nf = 3, 
                 xax = xaxis, 
                 yax = yaxis, 
-                ratio = 0.3)
-
+                ratio = 0.3, 
+                posi = "topleft")
+dev.off()
 
 ################################################################################
 # PCoA
