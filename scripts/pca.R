@@ -84,12 +84,14 @@ par(mfrow = c(2,1))
 # Plot first two axes
 xaxis <- 1
 yaxis <- 2
+# Create plot
 s.class(dfxy = allele.pca$li, 
         fac = pop.nums, 
         xax = xaxis, 
         yax = yaxis, 
         col = col.vector,
         clabel = 0.6)
+# Add the eigenvalues % variance explained plot
 add.scatter.eig(w = allele.pca$eig[1:20], 
                 nf = 3, 
                 xax = xaxis, 
@@ -99,12 +101,14 @@ add.scatter.eig(w = allele.pca$eig[1:20],
 # Plot second and third axes
 xaxis <- 2
 yaxis <- 3
+# Create plot
 s.class(dfxy = allele.pca$li, 
         fac = pop.nums, 
         xax = xaxis, 
         yax = yaxis, 
         col = col.vector,
         clabel = 0.6)
+# Add the eigenvalues % variance explained plot
 add.scatter.eig(w = allele.pca$eig[1:20], 
                 nf = 3, 
                 xax = xaxis, 
