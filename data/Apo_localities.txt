@@ -1,17 +1,17 @@
-pop.name	pop.number	latitude	longitude
-ArroyoBayo	7	37.38	-121.57
-Borrego	13	33.26	-116.28
-CampPendleton	12	33.32	-117.43
-DelPeurtoCanyon	6	37.42	-121.35
-Dockweiler	15	33.922	-118.434
-GrasslandsNPSK	10	49.039	-106.577
-HullMtn	1	39.52	-122.94
-Ladoga	2	39.09	-122.24
-langei	4	38.015	-121.79
-MonoclineRidge	8	36.75	-120.38
-MountDiablo	5	37.88	-121.91
-NEVallejo	3	38.14	-122.20
-PointLoma	14	32.67	-117.24
-TumeyHills	9	36.61	-120.67
-WildhorseMeadows	11	34.20	-116.81
+pop.name	pop.number	latitude	longitude	display.name
+ArroyoBayo	7	37.38	-121.57	Arroyo Bayo
+Borrego	13	33.26	-116.28	Borrego
+CampPendleton	12	33.32	-117.43	Camp Pendleton
+DelPeurtoCanyon	6	37.42	-121.35	Del Puerto Canyon
+Dockweiler	15	33.922	-118.434	Dockweiler
+GrasslandsNPSK	10	49.039	-106.577	Grasslands NP SK
+HullMtn	1	39.52	-122.94	Hull Mountain
+Ladoga	2	39.09	-122.24	Lodoga
+langei	4	38.015	-121.79	Antioch
+MonoclineRidge	8	36.75	-120.38	Monocline Ridge
+MountDiablo	5	37.88	-121.91	Mount Diablo
+NEVallejo	3	38.14	-122.20	Vallejo
+PointLoma	14	32.67	-117.24	Point Loma
+TumeyHills	9	36.61	-120.67	Tumey Hills
+WildhorseMeadows	11	34.20	-116.81	Wildhorse Meadows
 
