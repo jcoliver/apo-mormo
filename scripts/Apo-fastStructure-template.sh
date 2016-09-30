@@ -1,27 +1,16 @@
 #!/bin/bash
 
-# INCOMPLETE: suspended development as J. Dupuis is handling STRUCTURE runs
-
 # Running fastStructure on Apodemia data
-# using file created by str_to_two_line.py script
+# Jeff Oliver
+# jcoliver@email.arizona.edu
+# 2016-09-30
 
-#TODO: Need to parameterize this:
-# $fspath (path to fastSTRUCTURE)
-# $infile
-# $outfile (will be the input for chooseK.py)
-# $rngseed
-# $popfile
-# output filenames for graphics should just be:
-#   $outfile ".distruct." K ".svg (e.g. Apo/ApoTest05.distruct.2.svg)
+# WARNING: relies on many hard-coded paths
 
-## Reporting function if parameters are not correct
-usage() {
-	echo "Usage: $0 -i <input file> -o <output file> -k <max K> -p <popfile> [-s <seed>]"
-	exit 1
-}
-
-
-# in ~/Executables/fastStructure:
+################################################################################
+cd ~/Executables/fastStructure
+# input file is a two-line formatted file (converted from a one-line formatted 
+# STRUCTURE file using str_to_two_line.py script
 python structure.py -K 1 --input=Apo/Apo_fastStr3 --output=Apo/ApoTest05 --full --seed=201511251522 --format=str
 python structure.py -K 2 --input=Apo/Apo_fastStr3 --output=Apo/ApoTest05 --full --seed=201511251522 --format=str
 python structure.py -K 3 --input=Apo/Apo_fastStr3 --output=Apo/ApoTest05 --full --seed=201511251522 --format=str
@@ -38,12 +27,14 @@ python structure.py -K 13 --input=Apo/Apo_fastStr3 --output=Apo/ApoTest05 --full
 python structure.py -K 14 --input=Apo/Apo_fastStr3 --output=Apo/ApoTest05 --full --seed=201511251522 --format=str
 python structure.py -K 15 --input=Apo/Apo_fastStr3 --output=Apo/ApoTest05 --full --seed=201511251522 --format=str
 
-# Compare models (it only looks at Marginal Likelihoods, not the delta statistic):
+################################################################################
+# Compare models. 
+# NOTE: chooseK.py only looks at Marginal Likelihoods, not the delta statistic
 python chooseK.py --input=Apo/ApoTest05
-
 # Model complexity that maximizes marginal likelihood = 2
 # Model components used to explain structure in data = 5
 
+################################################################################
 # Graphics
 # For --input, use same value as used in structure.py call
 # Need to create a popfile, see create_popfile.py script
