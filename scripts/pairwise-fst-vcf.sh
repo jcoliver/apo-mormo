@@ -1,28 +1,41 @@
+#!/bin/bash
+
+# Pairwise Fst comparisons using vcftools
+# Jeff Oliver
+# jcoliver@email.arizona.edu
+# 2016-09-30
+
+################################################################################
 # Do all pairwise-Fst comparisons among populations
-# Execute from ~/Documents/Other Work/Apodemia/Code
-# Note this pulls out the weighted Fst estimate, which appears to 
+# Note this pulls out the weighted Fst estimate, which appears to
 # be the same value calculated by the genet.dist(method = "WC85")
 # function in the hierfstat package for R
+################################################################################
 
-VCFFILE="../Data/Apodemia_filteredVCF_0.9miss.recode.vcf"
-RESULTFILE="../Output/pairwise-fst-vcf.txt"
-POPPREFIX="../Data/pop-prefixes.txt"
-ALLINDS="../Data/inds-all.txt"
+################################################################################
+# Set up paths
+cd ~/Documents/Other\ Work/Apodemia/apo-repo/scripts
+VCFFILE="../data/Apodemia_filteredVCF_0.9miss.recode.vcf"
+RESULTFILE="../output/pairwise-fst-vcf.txt"
+POPPREFIX="../data/pop-prefixes.txt"
+ALLINDS="../data/inds-all.txt"
 FSTTEMP="fst.tmp"
 
-#POP1="HullMtn"
-#POP2="langei"
-#cat $POPPREFIX > pop1-prefixes.txt
+################################################################################
+# Prepare results files
 OUTERPOPS="$(cat $POPPREFIX)"
 SKIPPOP="$(head -n1 $POPPREFIX)"
 grep -v "$SKIPPOP" $POPPREFIX > innerpops.tmp
 echo -e "POP1\tPOP2\tFst" > $RESULTFILE
 
+################################################################################
+# Iterate over all populations (POP1)
 for POP1 in $OUTERPOPS; do
 	POP1FILE="inds-$POP1.tmp"
 	grep -e "$POP1" $ALLINDS > $POP1FILE
 	INNERPOPS="$(cat innerpops.tmp)"
 	FIRSTPOP2="$(head -n1 innerpops.tmp)"
+	# Iterate over all remaining populations (POP2)
 	for POP2 in $INNERPOPS; do
 		echo "===   $POP1 vs. $POP2   ==="
 		POP2FILE="inds-$POP2.tmp"
@@ -35,7 +48,7 @@ for POP1 in $OUTERPOPS; do
 		echo -e "$POP1\t$POP2\t$FST" >> $RESULTFILE
 		rm $POP2FILE $FSTTEMP
 	done
-	rm $POP1FILE 
+	rm $POP1FILE
 	grep -v "$FIRSTPOP2" innerpops.tmp > new-innerpops.tmp
 	mv new-innerpops.tmp innerpops.tmp
 done
@@ -43,7 +56,7 @@ done
 rm innerpops.tmp
 rm out.weir.fst
 
-# Development
+# Development debris
 # POP1="HullMtn"
 # POP2="langei"
 # POP1FILE="inds-$POP1.tmp"
