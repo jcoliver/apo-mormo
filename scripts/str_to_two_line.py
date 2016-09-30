@@ -1,30 +1,32 @@
 #!/usr/bin/env python2.7
 
-# Converts a single-line structure file into 
-# two-line format required by fastStructure
+# Convert structure-formatted file from single-line to two-line format
+# Jeff Oliver
+# jcoliver@email.arizona.edu
+# 2016-09-30
+
+################################################################################
 # Input file format:
 # Sample_01 1   10  10  13  11  12  12
 # Sample_02 1   12  12  -9  -9  12  12
 # Sample_03 2   12  12  13  13  10  12
-# This input has PAIRS of alleles in successive
-# columns, with bases corresponding to a two-
-# digit integer (A=10,T=11,G=12,C=13), so the 
-# genotypes for the example above would be:
+# This input has PAIRS of alleles in successive columns, with bases
+# corresponding to a two-digit integer (A=10,T=11,G=12,C=13), so the genotypes
+# for the example above would be:
 # Sample_01 1   AA  CT  GG
 # Sample_02 1   GG  -9  GG
 # Sample_03 2   GG  CC  AG
 
-# Output file format: (breaking each sample 
-# into two lines and adding four empty columns
-# [spaces] at the beginning of each line)
-# bases now represented by a single-digit 
+# Output file format:
+# (breaking each sample into two lines and adding four empty columns [spaces]
+# at the beginning of each line) bases now represented by a single-digit
 # integer (A=0,T=1,G=2,C=3)
-#     Sample_01 1 0 3 2
-#     Sample_01 1 0 2 2
-#     Sample_02 1 2 -9 2
-#     Sample_02 1 2 -9 2
-#     Sample_03 2 2 3 0
-#     Sample_03 2 2 3 2
+# Sample_01 1 0 3 2
+# Sample_01 1 0 2 2
+# Sample_02 1 2 -9 2
+# Sample_02 1 2 -9 2
+# Sample_03 2 2 3 0
+# Sample_03 2 2 3 2
 
 import io
 import sys
@@ -56,8 +58,8 @@ if os.path.isfile(out_filename):
     print "output filename \"" + out_filename + "\" already in use"
     quit()
 
-# Open the pipe to file and read each line, splitting
-# each genoptype into two alleles...
+# Open the pipe to file and read each line, splitting each genoptype into two
+# alleles...
 # Samples [dict]
 #   loci [list]
 #       alleles [list]
@@ -82,7 +84,6 @@ for line in str_fh:
         population = linesplit[1]
         # A list of 2-element lists
         genotypes = list()
-#        for i in range(2, len(linesplit)):
         for i in range(2, len(linesplit), 2):
             allele_one = linesplit[i]
             allele_two = linesplit[i + 1]
@@ -93,10 +94,6 @@ for line in str_fh:
                 print "Unrecognized allele two in " + str(sample_name) + ": " + str(allele_two)
                 quit()
             alleles = [allele_conv[allele_one], allele_conv[allele_two]]
-#            genotype = linesplit[i]
-#            alleles = [-9,-9]
-#            if genotype != "-9":
-#                alleles = [genotype[0], genotype[1]]
             genotypes.append(alleles)
         if len(genotypes) > 0:
             new_sample = Sample(sample_name, population, genotypes)
@@ -135,4 +132,3 @@ for sample in samples:
     outfile_fh.write(two_line)
 # End looping over samples_to_loci dict
 outfile_fh.close()
-
