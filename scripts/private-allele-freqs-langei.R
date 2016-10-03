@@ -1,27 +1,65 @@
-# Script for identifying langei-unique SNPs
+# Script for identifying langei private alleles
 # Jeff Oliver
 # jcoliver@email.arizona.edu
 # 2016-07-28
 
-rm(list = ls())
-# Read in vcftools-produced frequency files
-langei.freqs <- read.delim(file = "data/allele-freqs-langei.frq", header = TRUE)
-rownames(langei.freqs) <- paste0("pos", langei.freqs$POS)
-non.langei.freqs <- read.delim(file = "data/allele-freqs-non-langei.frq", header = TRUE)
+################################################################################
+# SUMMARY
+# * Reads in genetic data from genind object; also reads in locality information
+# for plot coloring purposes
+# * Performs Principal Components Analysis (PCA) on allele frequency data
+# * Plots first three axes of PCA (1 & 2 in one plot, 2 & 3 in a second plot)
+# * Runs preliminary Principal Coordinates Analyses (PCoA), which appears to 
+# produce results identical to PCA.
 
-combined.freqs <- langei.freqs[, c("REF", "ALT")]
+################################################################################
+# SETUP
+# Identify data files
+langei.file <- "output/allele-freqs/allele-freqs-langei.frq"
+non.langei.file <- "output/allele-freqs/allele-freqs-non-langei.frq"
+
+################################################################################
+# DATA PREP
+# Read in data, update column names, and combine frequencies into one data frame
+
+# Read in data
+langei.freqs <- read.delim(file = langei.file, header = TRUE)
+non.langei.freqs <- read.delim(file = non.langei.file, header = TRUE)
+
+# Extract allele frequencies & marker id
+combined.freqs <- langei.freqs[, c("POS", "REF", "ALT")]
+
+# Update column names
+colnames(combined.freqs)[which(colnames(combined.freqs) == "POS")] <- "pos"
 colnames(combined.freqs)[which(colnames(combined.freqs) == "REF")] <- "langei.ref"
 colnames(combined.freqs)[which(colnames(combined.freqs) == "ALT")] <- "langei.alt"
+
+# Calculate number of individuals sampled (N_CHR is number of chromosomes, so 
+# N_CHR = 22 means 11 individuals were sampled)
 combined.freqs$n.langei <- langei.freqs$N_CHR / 2
 
-combined.freqs$non.langei.ref <- non.langei.freqs$REF
-combined.freqs$non.langei.alt <- non.langei.freqs$ALT
+# Merge data frames based on marker id (pos)
+colnames(non.langei.freqs)[which(colnames(non.langei.freqs) == "REF")] <- "non.langei.ref"
+colnames(non.langei.freqs)[which(colnames(non.langei.freqs) == "ALT")] <- "non.langei.alt"
+combined.freqs <- merge(x = combined.freqs, 
+                        y = non.langei.freqs[, c("POS", "non.langei.ref", "non.langei.alt")],
+                        by.x = "pos",
+                        by.y = "POS")
 
-no.alt.in.non.langei <- combined.freqs[which(combined.freqs$non.langei.alt == 0), ]
-fixed.alt.langei <- no.alt.in.non.langei[which(no.alt.in.non.langei$langei.ref == 0), ]
+################################################################################
+# ANALYZE
+# Identify private alleles, subset data accordingly, and write to file
 
-# Saving some data for identifying genes
-no.alt.in.non.langei$pos <- rownames(no.alt.in.non.langei)
-no.alt.in.non.langei$pos <- gsub("pos", "", no.alt.in.non.langei$pos)
-write.table(x = no.alt.in.non.langei, file = "output/langei-unique-snps-info.txt", 
-            sep = "\t", row.names = FALSE, quote = FALSE)
+# Identify those alleles fixed for the reference allele in non-langei 
+# populations
+fixed.ref.non.langei <- combined.freqs[which(combined.freqs$non.langei.alt == 0), ]
+
+# TODO: what about markers with alternate allele fixed in non.langei 
+# populations? Doesn't happen with these data, but could miss private allele if 
+# the langei REF allele is only found in langei
+
+write.table(x = fixed.ref.non.langei, 
+            file = "output/private-langei-allele-freqs.txt", 
+            sep = "\t", 
+            row.names = FALSE, 
+            quote = FALSE)
