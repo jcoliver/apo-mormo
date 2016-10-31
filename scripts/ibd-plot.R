@@ -93,6 +93,12 @@ pdf(file = paste0("output/Apo-ibd-plot-", date.filename, ".pdf"), useDingbats = 
        xlab = "Log(distance)", 
        ylab = "Fst/1 - Fst")
   abline(lm(p.fst ~ geo.dist))
+  legend("topleft", 
+         legend = c("North-North", "South-South", "North-South"), 
+         col = "black", 
+         pt.bg = c("black", "white", "red"),
+         pch = 21,
+         cex = 0.8)
 dev.off()
 
 ################################################################################
