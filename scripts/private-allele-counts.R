@@ -9,8 +9,8 @@ pops <- scan(file = "data/pop-prefixes.txt", what = character())
 results.df <- data.frame(pop = pops, unique.snps = NA, fixed.unique.snps = NA)
 
 for (one.pop in pops) {
-  focal.freqs <- read.delim(file = paste0("data/allele-freqs-", one.pop, ".frq"), header = TRUE)
-  other.freqs <- read.delim(file = paste0("data/allele-freqs-non-", one.pop, ".frq"), header = TRUE)
+  focal.freqs <- read.delim(file = paste0("output/allele-freqs/allele-freqs-", one.pop, ".frq"), header = TRUE)
+  other.freqs <- read.delim(file = paste0("output/allele-freqs/allele-freqs-non-", one.pop, ".frq"), header = TRUE)
   
   combined.freqs <- focal.freqs[, c("POS", "CHROM")]
   combined.freqs$focal.ref <- focal.freqs$REF
