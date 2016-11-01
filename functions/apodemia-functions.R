@@ -39,8 +39,33 @@ Haversine <- function(lat1, long1, lat2, long2) {
 }
 
 ################################################################################
-#' Haversine formula for great circle distances
+#' Format localities information for downstream processing
 #' 
+#' @usage FormatLocalities(file, sep = "\t", genind, omit = c())
+#' 
+#' @param file path to file with locality information; must at least have a 
+#' vector 'pop.name'
+#' @param sep character delimiter used in file; defaults to "\t"
+#' @param genind  genind object; see package adegenet
+#' @param omit  character vector of locality names indicating which localities 
+#' to omit from returned data.frame 
+#' 
+#' @details Extracts relevant information from the localities \code{file] and 
+#' reconciles that with population information contained in \code{genind}. 
+#' Relies on very specific naming format of samples in genind object; that is, 
+#' it uses the substring preceding an underscore as the pop.name. These 
+#' substrings must match the levels in the \code{pop.name} vector read in the 
+#' localities file.
+#' 
+#' @return data.frame containing information from localities file (such as 
+#' latitude and longitude, should that be in the file), along with pop.number 
+#' and pop.name fields.
+#' 
+#' @examples 
+#' \dontrun{
+#' localities <- FormatLocalities(file = localities.file, genind = apo.str.genind, omit = c("Dockweiler", "GrasslandsNPSK"))
+#' }
+################################################################################
 FormatLocalities <- function(file, sep = "\t", genind, omit = c()) {
   localities <- read.table(file = file, sep = sep, header = TRUE)
   if (is.null(localities$pop.name)) {
@@ -57,7 +82,7 @@ FormatLocalities <- function(file, sep = "\t", genind, omit = c()) {
   genind.localities <- genind.localities[order(genind.localities$pop.name), ]
   genind.localities <- genind.localities[match(unique(genind.localities$pop.name), genind.localities$pop.name), ]
   
-  # Sanity check
+  # Reality check
   if (nrow(localities) != nrow(genind.localities)) {
     stop(paste0("Different number of localities in file (", nrow(localities), ") and genind object (", nrow(genind.localities), ")"))
   }
@@ -74,6 +99,23 @@ FormatLocalities <- function(file, sep = "\t", genind, omit = c()) {
 ################################################################################
 #' Calculate pairwise geographic distance matrix
 #' 
+#' @usage GeoDistances(localities)
+#' 
+#' @param localities  data.frame with locality information; required vectors are
+#' latitude, longitude, and pop.number
+#' 
+#' @details Uses \link{Haversine} function to calculate the 'as the crow flies' 
+#' geographic distance between a pair of geographic coordinates.
+#' 
+#' @return numeric matrix of geographic distances in kilometers
+#' 
+#' @examples 
+#' \dontrun{
+#' # Reconcile localities with populations included in STRUCTURE file
+#' localities <- FormatLocalities(file = localities.file, genind = apo.str.genind, omit = c("Dockweiler", "GrasslandsNPSK"))
+#' # Calculate geographic distance matrix
+#' geo.dist <- GeoDistances(localities = localities)
+#' }
 GeoDistances <- function(localities) {
   if (is.null(localities$latitude) || is.null(localities$longitude)) {
     stop("Missing at least one required vector (latitude, longitude) from localities data.frame.")
@@ -103,6 +145,25 @@ GeoDistances <- function(localities) {
 ################################################################################
 #' Generate an indicator matrix based on list of populations
 #' 
+#' @usage IndicatorMatrix(pop.set, localities)
+#' 
+#' @param pop.set character vector with population names to use for creating 
+#' indicator matrix
+#' @param localities  data.frame with locality information; required vectors are
+#' pop.name and pop.number
+#' 
+#' @details creates a binary symmetric matrix (0s and 1s) for partial mantel 
+#' tests. \code{pop.set} defines one group of populations, with all remaining 
+#' populations considered the other group. The returned matrix has 0s for 
+#' within-group cells in the matrix and 1s in the between-group cells.
+#' 
+#' @examples 
+#' \dontrun{
+#' # Reconcile localities with populations included in STRUCTURE file
+#' localities <- FormatLocalities(file = localities.file, genind = apo.str.genind, omit = c("Dockweiler", "GrasslandsNPSK"))
+#' south.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego")
+#' north.south <- IndicatorMatrix(pop.set = south.names, localities = localities)
+#' }
 IndicatorMatrix <- function(pop.set, localities) {
   if (is.null(pop.set) || length(pop.set) < 1) {
     stop("Object 'pop.set' empty or null; pop.set must include at least one population.")
