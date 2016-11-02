@@ -5,12 +5,7 @@
 
 ################################################################################
 # SUMMARY
-# * Reads in genetic data from genind object; also reads in locality information
-# for plot coloring purposes
-# * Performs Principal Components Analysis (PCA) on allele frequency data
-# * Plots first three axes of PCA (1 & 2 in one plot, 2 & 3 in a second plot)
-# * Runs preliminary Principal Coordinates Analyses (PCoA), which appears to 
-# produce results identical to PCA.
+# *
 
 ################################################################################
 # SETUP
