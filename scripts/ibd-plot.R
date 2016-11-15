@@ -18,8 +18,6 @@ pairwise.fst.file = "output/pairwise-fst.RData"
 localities.file = "output/reconciled-localities.RData"
 geo.dist.file = "output/pairwise-geo-dist.RData"
 
-date.filename <- format(Sys.Date(), "%Y-%m-%d")
-
 ################################################################################
 # DATA PREP
 
@@ -84,7 +82,7 @@ dot.tri <- lower.tri(x = dot.colors, diag = TRUE)
 dot.colors.lower <- dot.colors[dot.tri]
 
 # Plot to a file
-pdf(file = paste0("output/Apo-ibd-plot-", date.filename, ".pdf"), useDingbats = FALSE)
+pdf(file = paste0("output/Apo-ibd-plot.pdf"), useDingbats = FALSE)
   plot(x = geo.dist, 
        y = p.fst, 
        col = "black", 
@@ -136,7 +134,7 @@ langei.tri <- lower.tri(x = langei.colors, diag = TRUE)
 langei.colors.lower <- langei.colors[langei.tri]
 
 # Plot to a file
-pdf(file = paste0("output/Apo-ibd-plot-langei-", date.filename, ".pdf"), useDingbats = FALSE)
+pdf(file = paste0("output/Apo-ibd-plot-langei.pdf"), useDingbats = FALSE)
   plot(x = geo.dist, 
        y = p.fst, 
        col = "black", 
