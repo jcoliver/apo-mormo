@@ -94,7 +94,7 @@ pdf(file = paste0("output/Apo-ibd-plot.pdf"), useDingbats = FALSE)
   legend("topleft", 
          legend = c("North-North", "South-South", "North-South"), 
          col = "black", 
-         pt.bg = c("black", "white", "red"),
+         pt.bg = c("white", "black", "red"),
          pch = 21,
          cex = 0.8)
 dev.off()
