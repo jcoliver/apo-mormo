@@ -20,8 +20,7 @@ library(mapdata)
 
 # Establish input and output filenames
 localities.file <- "data/Apo_localities.txt"
-date.filename <- date.filename <- format(Sys.Date(), "%Y-%m-%d")
-map.out.file <- paste0("output/population-map-", date.filename, ".pdf")
+map.out.file <- "output/population-map.pdf"
 
 ################################################################################
 # DATA PREP
