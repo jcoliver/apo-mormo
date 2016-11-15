@@ -3,6 +3,7 @@
 # jcoliver@email.arizona.edu
 # 2016-09-06
 
+rm(list = ls())
 ################################################################################
 # SUMMARY
 # * Reads in fst and geographic distance matrices, as well as localities object
@@ -48,6 +49,11 @@ geo.dist <- log(x = geo.dist, base = 10)
 
 ################################################################################
 # IBD ANALYSES
+# 1. IBD s.s
+# 2. Partial Mantel, testing for North-South differentiation beyond IBD
+# 3. Partial Mantel, testing for langei differentiation beyond IBD
+# 4. IBD s.s. on just North populations
+# 5. IBD s.s. on just South populations
 
 # Setup results file
 sink(file = ibd.results.file, append = FALSE)
@@ -106,3 +112,52 @@ cat("\n-------------------------------------------------------------------------
 cat("\nIBD partial Mantel langei", sep = "")
 print(ibd.langei)
 sink()
+
+########################################
+# IBD on SOUTHern populations only
+south.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego")
+south.pop.numbers <- localities$pop.number[which(localities$pop.name %in% south.names)]
+
+# Need to extract part of distance matrices
+south.p.fst <- as.matrix(p.fst)[as.character(south.pop.numbers), as.character(south.pop.numbers)]
+south.p.fst <- as.dist(south.p.fst)
+
+south.geo.dist <- as.matrix(geo.dist)[as.character(south.pop.numbers), as.character(south.pop.numbers)]
+south.geo.dist <- as.dist(south.geo.dist)
+
+ibd <- mantel(xdis = south.geo.dist, 
+              ydis = south.p.fst, 
+              method = "pearson", 
+              permutations = 1000, 
+              parallel = 1)
+# IBD result
+sink(file = ibd.results.file, append = TRUE)
+cat("\n--------------------------------------------------------------------------------")
+cat("\nIBD South only", sep = "")
+print(ibd)
+sink()
+
+########################################
+# IBD on NORTHern populations only
+south.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego")
+north.pop.numbers <- localities$pop.number[which(!(localities$pop.name %in% south.names))]
+
+# Need to extract part of distance matrices
+north.p.fst <- as.matrix(p.fst)[as.character(north.pop.numbers), as.character(north.pop.numbers)]
+north.p.fst <- as.dist(north.p.fst)
+
+north.geo.dist <- as.matrix(geo.dist)[as.character(north.pop.numbers), as.character(north.pop.numbers)]
+north.geo.dist <- as.dist(north.geo.dist)
+
+ibd <- mantel(xdis = north.geo.dist, 
+              ydis = north.p.fst, 
+              method = "pearson", 
+              permutations = 1000, 
+              parallel = 1)
+# IBD result
+sink(file = ibd.results.file, append = TRUE)
+cat("\n--------------------------------------------------------------------------------")
+cat("\nIBD North only", sep = "")
+print(ibd)
+sink()
+
