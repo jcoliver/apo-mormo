@@ -1,5 +1,5 @@
 # Task list for Apodemia mormo project
-Last updated 2016-12-14
+Last updated 2016-12-15
 
 + Outline paper
 + Clean up R code
@@ -11,6 +11,7 @@ Last updated 2016-12-14
 + Look at inbreeding
     + FIS?
     + Hexp vs. Hobs?
+    + **Want to test for bottlenecks**
     + How much variation is within populations? How does this compare with other butterflies / flying phytophagous insects?
 + Review A. mormo literature
     + population structuring
