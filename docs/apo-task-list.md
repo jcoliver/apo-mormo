@@ -1,7 +1,8 @@
 # Task list for Apodemia mormo project
-Last updated 2016-12-15
+Last updated 2017-02-27
 
-+ Outline paper
+# Tasks
++ Write paper
 + Clean up R code
     + Revise README.md to root directory apo-repo?
     + Create legend (population # for PCA plot)
@@ -22,3 +23,13 @@ Last updated 2016-12-15
 + Identify langei SNPs
     + Pull out ID for all 77 unique langei SNPs
     + See output/langei-unique-snps-info.txt
+
+## Timeline
+| Deadline   | Item |
+|:---------- |:--------------------------------------------------------------- |
+| 2017-02-28 | First two paragraphs of Introduction |
+| 2017-03-03 | A. mormo literature, especially pop. structure and ecol. specialization |
+| 2017-03-07 | Paragraphs 3-5 of Introduction [SEND TO JULIAN & FELIX] |
+| 2017-03-14 | Materials & methods (where appropriate) Assign others to J. Dupuis as needed |
+| 2017-03-21 | Results (no figures yet...?) |
+| 2017-03-28 | Review progress so far; outline timeline for discussion |
