@@ -9,9 +9,11 @@ Secondary authors: T. Longcore, J. Johnson, Bryan Brunet?
     1. Bigger question: Genetics in ESU (DPS: Distinct Population Segments)
         + See also Management Units of Mortiz 1994
     2. Next-gen in ESU, see commentary by Allendorf Mol. Ecol. 2016, no longer single or handful of markers, which could miss genetic variation... (see Toews & Brelsford 2012 referenced in Allendorf 2016)
-    3. Introduce the system. What do we know about population subdivision in A. mormo (same as/ combine with #4?)
-    4. Touch on taxonomic mess that is A. mormo s.l.
-    5. Rough outline of what we did
+    3. Introduce _A. mormo_. What do we know about population subdivision in _A. mormo_, touch on taxonomic mess that is _A. mormo s.l._
+    4. Focus on _A. mormo langei_.
+        + Some basic biology
+        + What questions did we ask?
+        + What methods did we use?
 2. Materials & Methods
     1. Specimen acquisition & storage
     2. Extraction & amplification

@@ -10,16 +10,19 @@ Genetic markers have long been looked to for setting management policies, largel
 
 Many of the early challenges to the use of genetic markers in prioritizing conservation efforts were due to a relatively small sampling of genetic markers. Indeed, many studies relied on mitochondrial DNA (mtDNA) (REF), which has the benefit of a relatively high substitution rate, but is a single, non-recombining marker inherited from a single parent. Advances in genetic assays, especially next-generation sequencing technologies, have provided a means to overcome the problems associated with assays based on a trivial portion of the genome ([Allendorf 2016](#allendorf-2016)). Increasing the number of markers by orders of magnitude has made it less likely to miss important genetic variation due to insufficient sampling (REF). Furthermore, deeper coverage of genomes affords insights into previously undetectable selective pressures (REF) and demographic processes (REF). Here we apply next-generation sequencing to an endangered insect, in an effort to provide information useful to conservation priorities. Specifically we assess the support for genetic differentiation and the relationship to other populations and taxa.
 
+The Mormon metalmark species complex includes _Apodemia mormo_, _A. virgulti_, _A. mejicanus_ (Lepidoptera: Riodinidae)...This complex is distributed across western North America and is characterized by considerable among-population variation in caterpillar host-plant use, phenology, and wing pattern morphology (Scott 1986? Opler & Wright? More?). This variation has undoubtedly contributed to a proliferation of a number of taxonomic entities being described: there are at least 17 currently subspecies in the complex (Pelham's Catalog), some of which occur syntopically (see refs 39-41 in Proshek BMC Evol. Biol. paper).
 
-Lange's Metalmark Butterfly, _Apodemia mormo langei_ (Lepidoptera: Riodinidae), and other members of the _A. mormo_ complex 
+The focus of this work is the endangered subspecies, Lange's metalmark, _Apodemia mormo langei_, 
 
 
 1. Bigger question: Genetics in ESU (DPS: Distinct Population Segments)
     + See also Management Units of Mortiz 1994
 2. Next-gen in ESU, see commentary by Allendorf Mol. Ecol. 2016, no longer single or handful of markers, which could miss genetic variation... (see Toews & Brelsford 2012 referenced in Allendorf 2016)
-3. Introduce the system. What do we know about population subdivision in A. mormo (same as/ combine with #4?)
-4. Touch on taxonomic mess that is A. mormo s.l.
-5. Rough outline of what we did
+3. Introduce _A. mormo_. What do we know about population subdivision in _A. mormo_, touch on taxonomic mess that is _A. mormo s.l._
+4. Focus on _A. mormo langei_.
+    + Some basic biology
+    + What questions did we ask?
+    + What methods did we use?
 
 <a name="allendorf-2016">Allendorf, FW</a> 2016. Mol Ecol [doi: 10.1111/mec.13948](http://dx.doi.org/10.1111/mec.13948)
 
