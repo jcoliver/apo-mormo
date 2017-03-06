@@ -36,6 +36,7 @@ Secondary authors: T. Longcore, J. Johnson, Bryan Brunet?
     2. North / South some taxonomy, but missing samples from intervening areas
     3. Everyone is special – all populations differentiated
         + See Pearse 2016 (cited in Allendorf 2016) for "ignoring what we cannot detect"
+        + Discuss the difference between population structure and species a la recent Knowles paper in PNAS?
     4. Why such high differentiation – put this in context of other insect GBS studies. Other factors besides host plant (Wick et al. 2014). How many private alleles do they usually have? What is pairwise FST?
 
 ## Figures
