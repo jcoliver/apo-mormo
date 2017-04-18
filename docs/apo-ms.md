@@ -1,44 +1,53 @@
 # *Apodemia mormo s.l.* GBS paper
 
-Authors: J.C. Oliver, J.R. Dupuis, T. Longcore, J. Johnson, F.A.H. Sperling
-Additional authors: Bryan Brunet?
+Authors: J.C. Oliver, J.R. Dupuis, T. Longcore, J. Johnson, F.A.H. Sperling  
+Additional authors: Bryan Brunet?  
+Target journal: _Conservation Biology_
 
 ## Abstract
 
 ## Introduction
-Genetic markers have long been looked to for setting management policies, largely with the intent of applying objective criteria to identify taxa of conservation priority (**REFS** in [Allendorf 2016](#allendorf-2016)). Genetic differentiation or genetic 'uniqueness' has been used with a variety of descriptions, including Evolutionary Significant Units ([Ryder 1986](#ryder-1986)), Distinct Population Segments ([U.S. Fish and Wildlife Service 1996](#usfws-1996)), and Management Units [Moritz 1994](#moritz-1994). Criteria for defining populations warranting conservation action include reciprocal monophyly and significant differences in allele frequencies, applying one of a number of tests for genetic differentiation ([Moritz 1994](#moritz-1994)). Such approaches have mixed results, with some genetic analyses corroborating other evidence supporting the distinctness of a taxon ([Braulik et al. 2015](#braulik-et-al-2015)), some suggesting no genetic differentiation of populations already under conservation focus ([Vidal et al. 2014](#vidal-et-al-2014)), and some identifying previously unrecognized genetic lineages ('cryptic diversity') ([Yoder et al. 2002](#yoder-et-al-2002)).
+Genetic markers have long been looked to for setting management policies, largely with the intent of applying objective criteria to identify taxa of conservation priority (**REFS** in [Allendorf 2016](#allendorf-2016)). Genetic differentiation or genetic 'uniqueness' has been used with a variety of descriptions, including Evolutionary Significant Units ([Ryder 1986](#ryder-1986)), Distinct Population Segments ([U.S. Fish and Wildlife Service 1996](#usfws-1996)), and Management Units ([Moritz 1994](#moritz-1994)). Criteria for defining populations warranting conservation action include reciprocal monophyly and significant differences in allele frequencies, applying one of a number of tests for genetic differentiation ([Moritz 1994](#moritz-1994)). Such approaches have mixed results, with some genetic analyses corroborating other evidence supporting the distinctness of a taxon ([Braulik et al. 2015](#braulik-et-al-2015)), some suggesting no genetic differentiation of populations already under conservation focus ([Vidal et al. 2014](#vidal-et-al-2014)), and some identifying previously unrecognized genetic lineages ('cryptic diversity') ([Yoder et al. 2002](#yoder-et-al-2002)).
 
 Many of the early challenges to the use of genetic markers in prioritizing conservation efforts were due to a relatively small sampling of genetic markers. Indeed, many studies relied on plastid DNA (mitochondrial or chloroplast), which has the benefit of a relatively high substitution rate, but is (usually) a single, non-recombining marker inherited from a single parent. Advances in genetic assays, especially next-generation sequencing technologies, have provided a means to overcome the problems associated with assays based on a trivial portion of the genome ([Allendorf 2016](#allendorf-2016)). Increasing the number of markers has made it less likely to miss important genetic variation due to insufficient sampling ([Dupuis et al. 2012](#dupuis-et-al-2012)]). Furthermore, deeper coverage of genomes affords insights into selective pressures and demographic processes that would not be possible with a handful of genetic markers ([Fraser et al. 2014](#fraser-et-al-2014), [Lemay & Rossello 2015](#lemay-rossello-2015), [Rhode et al. 2017](#rhode-et-al-2017)). Here we apply next-generation sequencing to an endangered insect, in an effort to provide information useful to conservation priorities. Specifically we assess the support for genetic differentiation and the relationship to other populations and taxa.
 
 The Mormon Metalmark species complex includes _Apodemia mormo_ (Felder & Felder), _A. virgulti_ (Behr), _A. mejicanus_ (Behr) (Lepidoptera: Riodinidae). This complex is distributed across western North America and is characterized by considerable among-population variation in phenology and wing pattern morphology ([Opler & Powell 1961](#opler-powell-1961); Scott 1986; [Pratt & Ballmer 1991](#pratt-ballmer-1991)). Most populations feed on species of wild buckwheat, _Eriogonum_ (Michaux) (Polygonaceae) as caterpillars ([Opler & Powell 1961](#opler-powell-1961)). While there is also substantial among-population variation in caterpillar host-plant use, additional factors also limit habitat occupancy ([Wick et al. 2014](#wick-et-al-2014)), resulting in a relatively localized distribution pattern of this widespread complex (Scott 1984?). The variation in morphology and behavior has contributed to a proliferation of a number of taxonomic entities being described ([Opler & Powell 1961](#opler-powell-1961)): there are at least 17 currently subspecies in the complex (Pelham's Catalog), some of which occur syntopically ([Pratt & Ballmer 1991](#pratt-ballmer-1991)). In some cases, this variation is accompanied by genetic differentiation, in some cases over relatively small geographic scales ([Crawford et al. 2011](#crawford-et-al-2011), [Proshek et al. 2013](#proshek-et-al-2013)), and a number of populations in this species complex are under or are being considered for conservation protection ([Crawford et al. 2011](#crawford-et-al-2011), [Proshek et al. 2013](#proshek-et-al-2013), [Proshek et al. 2015](#proshek-et-al-2015)).
 
-The focus of the current work, Lange's metalmark, _Apodemia mormo langei_ (Comstock), was declared endangered in 1976, largely based on loss of habitat due to agricultural and industrial development ([U.S. Fish & Wildlife Service 1976](#usfws-1976)). Historically restricted to sand dunes at the confluence of the San Joaquin and Sacramento Rivers of California, _A. m. langei_ is currently only known to occur Antioch Dunes National Wildlife Refuge in Contra Costa County. This univoltine entity feeds on _E. nudum_ var. _psychicola_, which is also restricted to the Antioch Dunes ([Reveal 2007](#reveal-2007)). Currently _A. m. langei_ is actively managed through a captive breeding program ([U.S. Fish & Wildlife Service 2008](#usfws-2008)). Previous genetic work showed no evidence of significant population differentiation in _A. m. langei_ ([Proshek et al. 2015](#proshek-et-al-2015)): briefly, specimens of _A. m. langei_ were genetically similar other specimens of _A. mormo_ sampled from nearby locations. While this study did show evidence of genetic structure at the scale of the entire range of _A. mormo_, the results were based on a small portion of the genome (one mitochondrial marker and six microsatellites), so there is potential for unsampled genetic variation. Here we use genotyping by sequencing (GBS) [Elshire et al. 2011](#elshire-et-al-2011) to survey a large portion of genomic variation in the _A. mormo_ complex through SNP genotyping. With this large dataset we assess support for genetic distinctness of _A. m. langei_ and provide a better understanding of population structure and genetic diversity within the _A. mormo_ complex. The latter may be useful in identifying source populations for additional individuals should they be necessary for the managed persistence of _A. m. langei_.
+The focus of the current work, Lange's metalmark, _Apodemia mormo langei_ (Comstock), was declared endangered in 1976, largely based on loss of habitat due to agricultural and industrial development ([U.S. Fish & Wildlife Service 1976](#usfws-1976)). Historically restricted to sand dunes at the confluence of the San Joaquin and Sacramento Rivers of California, _A. m. langei_ is currently only known to occur Antioch Dunes National Wildlife Refuge in Contra Costa County. This univoltine entity feeds on _E. nudum_ var. _psychicola_ Reveal, which is also restricted to the Antioch Dunes ([Reveal 2007](#reveal-2007)). Currently _A. m. langei_ is actively managed through a captive breeding program ([U.S. Fish & Wildlife Service 2008](#usfws-2008)). Previous genetic work showed no evidence of significant population differentiation in _A. m. langei_ ([Proshek et al. 2015](#proshek-et-al-2015)): briefly, specimens of _A. m. langei_ were genetically similar to other specimens of _A. mormo_ sampled from nearby locations. While this study did show evidence of genetic structure at the scale of the entire range of _A. mormo_, the results were based on a small portion of the genome (one mitochondrial marker and six microsatellites), so there is potential for unsampled genetic variation. Here we use genotyping by sequencing (GBS) ([Elshire et al. 2011](#elshire-et-al-2011)) to survey a large portion of genomic variation in the _A. mormo_ complex through SNP genotyping. With this large dataset we assess support for genetic distinctness of _A. m. langei_ and provide a better understanding of population structure and genetic diversity within the _A. mormo_ complex. The latter may be useful in identifying source populations for additional individuals should they be necessary for the managed persistence of _A. m. langei_.
 
 ## Outline of remaining sections
 2. Materials & Methods
-    1. Specimen acquisition & storage (JD, FAS)
-    2. Extraction & amplification (JD)
-    3. Data processing (JD)
+    1. Specimen acquisition & storage (JRD, FAHS)
+    2. Extraction & amplification (JRD)
+    3. Data processing (JRD)
     4. Analyses
-        1. Inclusion/exclusion of certain samples? (i.e. Dockweiler, GNPSK)
-        2. STRUCTURE (JD)
-        3. SNAPP (JD)
+        1. Inclusion/exclusion of certain samples? (i.e. Dockweiler, GNPSK) (JRD, FAHS)
+        2. STRUCTURE (JRD)
+        3. SNAPP (JRD)
         4. Unique alleles (JCO)
         5. FIS? (JCO)
         6. IBD (JCO)
         7. AMOVA? See Klicka et al. 2016. (JCO)
 3. Results
-    1. STRUCTURE (JD, JO)
-    2. SNAPP (JD, JO)
-    3. Unique alleles (JD, JO)
-    4. IBD (JD, JO)
+    1. STRUCTURE (JRD)
+    2. SNAPP (JRD)
+    3. Unique alleles (JCO)
+    4. IBD (JCO)
 4. Discussion
     1. Overview: Populations differentiated; large north/south split, and large pairwise-FST
     2. Discuss North / South split in regards to taxonomy, but missing samples from intervening areas
     3. Everyone is special – all populations differentiated
         + See Pearse 2016 (cited in [Allendorf 2016](#allendorf-2016)) for "ignoring what we cannot detect"
         + Discuss the difference between population structure and species _a la_ recent Knowles paper in PNAS ([doi: 10.1073/pnas.1607921114](http://dx.doi.org/10.1073/pnas.1607921114))?
-    4. Why such high differentiation – put this in context of other insect GBS studies. Other factors besides host plant ([Wick et al. 2014](#wick-et-al-2014)). How many private alleles do they usually have? What is pairwise FST?
+    4. Why such high differentiation?
+        + Put this in context of other insect GBS studies.
+        + Other factors besides host plant ([Wick et al. 2014](#wick-et-al-2014)).
+        + How many private alleles do they usually have?
+        + What about pairwise FST?
+    5. Conclusions:
+        + _langei_ is unique, just like most other populations
+        + Other support for "distinction" includes wing pattern and host use
+        + Biology is complex, so our conservation decision making processes cannot be one-dimensional or rely on single metric (oh it would be so nice if they could).
 
 ## References
 <a name="allendorf-2016">Allendorf, FW</a> 2016. Mol Ecol [doi: 10.1111/mec.13948](http://dx.doi.org/10.1111/mec.13948)
