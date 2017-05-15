@@ -45,6 +45,10 @@ geo.dist <- log(x = geo.dist, base = 10)
 # "white" for north-north
 # "black" for south-south
 # "red" for north-south
+#
+# Identify comparions with langei population, using triangles for those 
+# comparions
+#
 # Note there is some funkiness because the distance matrices are have 
 # number of rows & columns equal to the number of localities minus one;
 # these distance matrices have columns corresponding to populations 1 through 
@@ -54,9 +58,15 @@ south.pop.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego"
 south.pop.numbers <- localities$pop.number[which(localities$pop.name %in% south.pop.names)]
 dot.colors <- matrix(data = "purple", nrow = nrow(localities) - 1, ncol = nrow(localities) - 1)
 rownames(dot.colors) <- localities$pop.number[2:length(localities$pop.number)]
-colnames(dot.colors) <- localities$pop.number[1:(length(localities$pop.num) - 1)]
+colnames(dot.colors) <- localities$pop.number[1:(length(localities$pop.number) - 1)]
 
-# Loop over row/columns to categorize comparison and assign appropriate color
+langei.pop.name <- c("langei")
+langei.pop.number <- localities$pop.number[which(localities$pop.name %in% langei.pop.name)]
+dot.shapes <- matrix(data = 0, nrow = nrow(localities) - 1, ncol = nrow(localities) - 1)
+rownames(dot.shapes) <- localities$pop.number[2:length(localities$pop.number)]
+colnames(dot.shapes) <- localities$pop.number[1:(length(localities$pop.number) - 1)]
+
+# Loop over row/columns to categorize comparison and assign appropriate color and shape
 for (i in 1:nrow(dot.colors)) {
   for (j in 1:i) {
     locality.i <- i + 1
@@ -74,19 +84,28 @@ for (i in 1:nrow(dot.colors)) {
       d <- "white"
     }
     dot.colors[i, j] <- d
+    
+    s <- 21
+    if (locality.i.number %in% langei.pop.number
+        || locality.j.number %in% langei.pop.number) {
+      s <- 25
+    }
+    dot.shapes[i, j] <- s
   }
 }
 
 # We only want the elements from the lower triangle of the matrix (diagonal included)
 dot.tri <- lower.tri(x = dot.colors, diag = TRUE)
 dot.colors.lower <- dot.colors[dot.tri]
+dot.shapes.lower <- dot.shapes[dot.tri]
 
 # Plot to a file
 pdf(file = paste0("output/Apo-ibd-plot.pdf"), useDingbats = FALSE)
   plot(x = geo.dist, 
        y = p.fst, 
        col = "black", 
-       pch = 21, 
+       # pch = 21, 
+       pch = dot.shapes.lower,
        bg = dot.colors.lower, 
        xlab = "Log(distance)", 
        ylab = "Fst/1 - Fst")
