@@ -161,3 +161,33 @@ cat("\nIBD North only", sep = "")
 print(ibd)
 sink()
 
+########################################
+# IBD on NORTHern populations only, partial Mantel on langei
+# Partial Mantel to see if langei difference is beyond IBD
+south.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego")
+north.pop.numbers <- localities$pop.number[which(!(localities$pop.name %in% south.names))]
+
+# Need to extract part of distance matrices
+north.p.fst <- as.matrix(p.fst)[as.character(north.pop.numbers), as.character(north.pop.numbers)]
+north.p.fst <- as.dist(north.p.fst)
+
+north.geo.dist <- as.matrix(geo.dist)[as.character(north.pop.numbers), as.character(north.pop.numbers)]
+north.geo.dist <- as.dist(north.geo.dist)
+
+langei <- "langei"
+north.localities <- localities[!c(localities$pop.name %in% south.names), ]
+langei.indicator <- IndicatorMatrix(pop.set = langei, localities = north.localities)
+
+ibd <- mantel.partial(xdis = langei.indicator,
+              ydis = north.p.fst, 
+              zdis = north.geo.dist, 
+              method = "pearson", 
+              permutations = 1000, 
+              parallel = 1)
+
+# IBD result
+sink(file = ibd.results.file, append = TRUE)
+cat("\n--------------------------------------------------------------------------------")
+cat("\nIBD North only, partial Mantel for langei", sep = "")
+print(ibd)
+sink()
