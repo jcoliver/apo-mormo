@@ -66,11 +66,26 @@ calcP <- function(Nj, Nij, g) {
   return(prob)
 }
 
-calcRichness <- function(N, j, g) {
-  p.vector <- apply(X = N, MARGIN = 1, FUN = calcP, i = 1, j = j, g = g)
-  return(sum(p.vector))
+printArgs <- function(Nj, Nij, g, standin.for.nij) {
+  Nij <- standin.for.nij
+  cat("Nj = ", Nj, "\n")
+  cat("Nij = ", Nij, "\n")
+  cat("g = ", g, "\n")
+  return(calcP(Nj = Nj, Nij = Nij, g = g))
 }
 
+calcRichness <- function(N, j, g) {
+  ## TODO: here, but stumbling on apply / aaply
+  ## Try first with for loop, then attempt a *ply approach
+  # apply(X = N, MARGIN = 1, FUN = printArgs, Nj = 1, Nij = 2, g = 2)
+  richness <- aaply(.data = N, .margins = 2, .fun = printArgs, Nj = sum(N.matrix[, j]), g = 2, standin.for.nij = N.matrix[i])
+  return(sum(richness))
+  # p.vector <- apply(X = N, MARGIN = 1, FUN = calcP, Nj = sum(x), Nij = x[j], g = g)
+  # return(sum(p.vector))
+}
+calcRichness(N = N.matrix, j = 1, g = 2)
+
+## TESTS
 N.matrix <- matrix(data = c(3, 6, 1, 0), nrow = 2, ncol = 2, byrow = TRUE)
 
 # P112 = 1 - Q112
