@@ -47,6 +47,4 @@ calcRichness.v(N.col = N.matrix[, 2], 4)
 
 # Allele richness for each population
 calcRichness.all(N = N.matrix, g = 2)
-calcRichness.all(N = N.matrix, g = 2, loop = FALSE)
 calcRichness.all(N = N.matrix, g = 4)
-calcRichness.all(N = N.matrix, g = 4, loop = FALSE)

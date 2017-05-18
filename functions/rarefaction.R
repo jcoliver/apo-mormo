@@ -57,7 +57,8 @@ calcRichness <- function(N, j, g) {
 }
 
 ################################################################################
-# Probability of *not* observing allele in population given sample of g genes
+# Probability of *not* observing allele in single population given sample of g 
+# genes
 # N.col is vector of allele counts for population j
 calcQ.v <- function(N.col, g) {
   if(length(N.col) < 2 || sum(N.col) == 0) {
@@ -86,7 +87,7 @@ calcQ.v <- function(N.col, g) {
 }
 
 ################################################################################
-# Probability of observing allele in population given sample of g genes
+# Probability of observing allele in single population given sample of g genes
 # N.col is vector of allele counts for population j
 calcP.v <- function(N.col, g) {
   prob <- 1 - calcQ.v(N.col = N.col, g = g)
@@ -94,6 +95,7 @@ calcP.v <- function(N.col, g) {
 }
 
 ################################################################################
+# Calculate allele richness for a single population given sample of g genes
 # N.col is vector of allele counts for population j
 calcRichness.v <- function(N.col, g) {
   sum.richness <- sum(calcP.v(N.col = N.col, g = g))
@@ -104,16 +106,16 @@ calcRichness.v <- function(N.col, g) {
 # Calculate allele richness in each population
 # N is matrix of allele counts for all populations, with alleles as rows and 
 # populations as columns
-calcRichness.all <- function(N, g, loop = TRUE) {
-  if (loop) {
-    num.pops <- ncol(N)
-    richness <- numeric(num.pops)
-    for (j in 1:num.pops) {
-      richness[j] <- calcRichness.v(N.col = N[, j], g = g)
-    }
-    return(richness)
-  } else {
-    all.rich <- apply(X = N, MARGIN = 2, FUN = function(x) {calcRichness.v(N.col = x, g = g)})
-    return(all.rich)
-  }
+#' Calculate allele richness for each population
+#' @param N matrix of allele counts for all populations, with alleles as rows 
+#' and populations as columns
+#' @param g gene sample size; generally the number of haploids or twice the 
+#' number of diploid individuals in the smallest population sample size
+#' @description Calculates allele richness for a rarefied sample of size 
+#' \code{g}
+#' @return A vector of allele richness, where each element is the richness for 
+#' a single population indexed by columns in \code{N}
+calcRichness.all <- function(N, g) {
+  all.rich <- apply(X = N, MARGIN = 2, FUN = function(x) {calcRichness.v(N.col = x, g = g)})
+  return(all.rich)
 }
