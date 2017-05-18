@@ -40,3 +40,13 @@ calcP.v(N.col = N.matrix[, 1], g = 2)
 # CANNOT work, because Nj (total # of genes surveyed from population is not included)
 calcP.v(N.col = N.matrix[1, 2], g = 2)
 calcP.v(N.col = N.matrix[2, 2], g = 2)
+
+# Allele richness for individual populations
+calcRichness.v(N.col = N.matrix[, 1], 4)
+calcRichness.v(N.col = N.matrix[, 2], 4)
+
+# Allele richness for each population
+calcRichness.all(N = N.matrix, g = 2)
+calcRichness.all(N = N.matrix, g = 2, loop = FALSE)
+calcRichness.all(N = N.matrix, g = 4)
+calcRichness.all(N = N.matrix, g = 4, loop = FALSE)
