@@ -86,6 +86,9 @@ calcRichness.all <- function(N, g) {
 
 ################################################################################
 #' Rarefied private allele count
+#' @param N.col vector of allele counts for a single population
+#' @param g gene sample size; generally the number of haploids or twice the 
+#'   number of diploid individuals in the smallest population sample size
 #' 
 calcPrivate <- function(N.col, g) {
   # sum over all alleles
@@ -93,6 +96,16 @@ calcPrivate <- function(N.col, g) {
   m <- length(N.col)
   private.sum <- 0
   Pijg <- calcP.v(N.col = N.col, g = g) # a vector of allele probabilities
-  # Now we need a vector of the Q product
 
+  # Now we need a vector of the Q products
+  Q.products <- numeric(length(N.col))  
+  for (j in 1:length(N.col)) {
+    # omit the jth element in N.col
+    Q.products[j] <- prod(calcQ.v(N.col = N.col[-j], g = g))
+  }
+  
+  # Have vector Pijg and vector of product Qij'g
+  # Multiply corresponding elements in each, then sum result
+  pi.hat <- sum(Pijg * Q.products)
+  return(pi.hat)
 }
