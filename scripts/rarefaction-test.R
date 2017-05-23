@@ -42,3 +42,8 @@ calcPrivate(N = N.matrix, g = 2, j = 1)
 calcPrivate(N = N.matrix, g = 4, j = 1)
 calcPrivate(N = N.matrix, g = 2, j = 2)
 calcPrivate(N = N.matrix, g = 4, j = 2)
+
+# Private alleles for all populations
+source(file = "functions/rarefaction.R")
+calcPrivate.all(N = N.matrix, g = 2)
+calcPrivate.all(N = N.matrix, g = 4)

@@ -109,3 +109,21 @@ calcPrivate <- function(N, g, j) {
   pi.hat <- sum(Pijg * Q.products)
   return(pi.hat)
 }
+
+################################################################################
+#' Rarefied private allele count for all populations
+#' 
+calcPrivate.all <- function(N, g) {
+  
+  
+  private.alleles <- numeric(ncol(N))
+  # Considerable duplication of efforts here, since the Q.matrix need only be 
+  # computed once for a given value of g, yet it gets re-calculated j times
+  # Would be better to create a matrix of Pijg values here, and a corresponding
+  # Q matrix, then pick & choose from them as appropriate to fill the vector 
+  # of private allele estimates
+  for (j in 1:ncol(N)) {
+    private.alleles[j] <- calcPrivate(N = N, g = g, j = j)
+  }
+  return(private.alleles)
+}
