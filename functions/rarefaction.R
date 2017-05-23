@@ -85,25 +85,25 @@ calcRichness.all <- function(N, g) {
 }
 
 ################################################################################
-#' Rarefied private allele count
-#' @param N.col vector of allele counts for a single population
+#' Rarefied private allele count for single population
+#' @param N matrix of allele counts for all populations, with alleles as rows 
+#'   and populations as columns
 #' @param g gene sample size; generally the number of haploids or twice the 
 #'   number of diploid individuals in the smallest population sample size
+#' @param j index of the population for which to perform calculations
 #' 
-calcPrivate <- function(N.col, g) {
+calcPrivate <- function(N, g, j) {
   # sum over all alleles
   # Pijg * [(]prod from j'=1 to J, j' != j (Qij'g)]
-  m <- length(N.col)
+  m <- nrow(N)
   private.sum <- 0
-  Pijg <- calcP.v(N.col = N.col, g = g) # a vector of allele probabilities
-
-  # Now we need a vector of the Q products
-  Q.products <- numeric(length(N.col))  
-  for (j in 1:length(N.col)) {
-    # omit the jth element in N.col
-    Q.products[j] <- prod(calcQ.v(N.col = N.col[-j], g = g))
-  }
+  Pijg <- calcP.v(N.col = N[, j], g = g) # a vector of allele probabilities
   
+  # Now we need a vector of the Q products
+  Q.matrix <- apply(X = N, MARGIN = 2, FUN = function(x) {calcQ.v(N.col = x, g = g)})
+  Q.matrix[, j] <- 1 # Dummy coding, so product of row is unaffected for column j
+  Q.products <- apply(X = Q.matrix, MARGIN = 1, FUN = prod)
+
   # Have vector Pijg and vector of product Qij'g
   # Multiply corresponding elements in each, then sum result
   pi.hat <- sum(Pijg * Q.products)
