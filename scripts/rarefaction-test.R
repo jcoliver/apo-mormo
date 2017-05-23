@@ -47,3 +47,24 @@ calcPrivate(N = N.matrix, g = 4, j = 2)
 source(file = "functions/rarefaction.R")
 calcPrivate.all(N = N.matrix, g = 2)
 calcPrivate.all(N = N.matrix, g = 4)
+
+
+source(file = "functions/rarefaction.R")
+N.matrix <- matrix(data = c(3, 6, 4, 0, 
+                            3, 0, 0, 0, 
+                            0, 0, 0, 4), nrow = 3, ncol = 4, byrow = TRUE)
+calcPrivate.all(N = N.matrix, g = 2)
+calcPrivate.all(N = N.matrix, g = 4)
+
+# Prob allele *not* found
+calcQ.v(N.col = N.matrix[, 1], g = 2)
+calcQ.v(N.col = N.matrix[, 1], g = 4)
+calcQ.v(N.col = N.matrix[, 2], g = 4)
+calcQ.v(N.col = N.matrix[, 3], g = 4)
+calcQ.v(N.col = N.matrix[, 4], g = 4)
+
+# Prob allele found
+calcP.v(N.col = N.matrix[, 1], g = 2)
+calcP.v(N.col = N.matrix[, 1], g = 4)
+calcP.v(N.col = N.matrix[, 2], g = 2)
+calcP.v(N.col = N.matrix[, 2], g = 4)

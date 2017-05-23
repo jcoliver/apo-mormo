@@ -18,8 +18,8 @@
 #'   given population for a rarefied sample of size \code{g}
 #' @return vector of probabilities for single population
 calcQ.v <- function(N.col, g) {
-  if(length(N.col) < 2 || sum(N.col) == 0) {
-    return(NA)
+  if(length(N.col) < 2 || sum(N.col) == 0 || sum(N.col) < g) {
+    return(rep(x = NA, times = length(N.col)))
   }
   Nj <- sum(N.col)
   product <- rep(x = 1, times = length(N.col))
@@ -91,7 +91,7 @@ calcRichness.all <- function(N, g) {
 #' @param g gene sample size; generally the number of haploids or twice the 
 #'   number of diploid individuals in the smallest population sample size
 #' @param j index of the population for which to perform calculations
-#' 
+#'
 calcPrivate <- function(N, g, j) {
   # sum over all alleles
   # Pijg * [(]prod from j'=1 to J, j' != j (Qij'g)]
@@ -112,6 +112,10 @@ calcPrivate <- function(N, g, j) {
 
 ################################################################################
 #' Rarefied private allele count for all populations
+#' @param N matrix of allele counts for all populations, with alleles as rows 
+#'   and populations as columns
+#' @param g gene sample size; generally the number of haploids or twice the 
+#'   number of diploid individuals in the smallest population sample size
 #' 
 calcPrivate.all <- function(N, g) {
   
