@@ -115,7 +115,22 @@ calcPrivate <- function(N, g, j) {
 #' 
 calcPrivate.all <- function(N, g) {
   
+  # Both P and Q matrix have alleles in rows, and populations in columns
+  P.matrix <- apply(X = N, MARGIN = 2, FUN = function(x) {calcP.v(N.col = x, g = g)})
+  Q.matrix <- apply(X = N, MARGIN = 2, FUN = function(x) {calcQ.v(N.col = x, g = g)})
   
+  # Private allele calculation:
+  #' For population 1, it is the sum of (three alleles, four populations):
+  #' P114 x (Q124 x Q134 x Q144)
+  #' P214 x (Q224 x Q234 x Q244)
+  #' P314 x (Q324 x Q334 x Q344)
+  #' 
+  #' For population 2, it is the sum of (three alleles, four populations):
+  #' P124 x (Q114 x Q134 x Q144)
+  #' P224 x (Q214 x Q234 x Q244)
+  #' P324 x (Q314 x Q334 x Q344)
+
+  # Old, slow implementation:
   private.alleles <- numeric(ncol(N))
   # Considerable duplication of efforts here, since the Q.matrix need only be 
   # computed once for a given value of g, yet it gets re-calculated j times
