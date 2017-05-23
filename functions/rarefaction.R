@@ -116,6 +116,10 @@ calcPrivate <- function(N, g, j) {
 calcPrivate.all <- function(N, g) {
   
   # Both P and Q matrix have alleles in rows, and populations in columns
+  #' P114 P124 P134 P144
+  #' P214 P224 P234 P244
+  #' P314 P324 P334 P344
+  #' P414 P424 P434 P444
   P.matrix <- apply(X = N, MARGIN = 2, FUN = function(x) {calcP.v(N.col = x, g = g)})
   Q.matrix <- apply(X = N, MARGIN = 2, FUN = function(x) {calcQ.v(N.col = x, g = g)})
   
@@ -130,15 +134,27 @@ calcPrivate.all <- function(N, g) {
   #' P224 x (Q214 x Q234 x Q244)
   #' P324 x (Q314 x Q334 x Q344)
 
-  # Old, slow implementation:
+  # private allele count vector; each element corresponds to a population
   private.alleles <- numeric(ncol(N))
+  for (j in 1:ncol(N)) {
+    corrected.Q.matrix <- Q.matrix
+    corrected.Q.matrix[, j] <- 1
+    Q.products <- apply(X = corrected.Q.matrix, MARGIN = 1, FUN = prod)
+    # Q.products <- apply(X = Q.matrix, MARGIN = 1, FUN = prod)
+    
+    private.alleles[j] <- sum(P.matrix[, j] * Q.products)
+  }
+
+  # Old, slow implementation:
+  private.alleles.slow <- numeric(ncol(N))
   # Considerable duplication of efforts here, since the Q.matrix need only be 
   # computed once for a given value of g, yet it gets re-calculated j times
   # Would be better to create a matrix of Pijg values here, and a corresponding
   # Q matrix, then pick & choose from them as appropriate to fill the vector 
   # of private allele estimates
   for (j in 1:ncol(N)) {
-    private.alleles[j] <- calcPrivate(N = N, g = g, j = j)
+    private.alleles.slow[j] <- calcPrivate(N = N, g = g, j = j)
   }
-  return(private.alleles)
+  
+  return(list(fast = private.alleles, slow = private.alleles.slow))
 }
