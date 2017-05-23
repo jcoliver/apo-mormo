@@ -179,23 +179,10 @@ calcPrivate.all <- function(N, g) {
   private.alleles <- numeric(ncol(N))
   for (j in 1:ncol(N)) {
     corrected.Q.matrix <- Q.matrix
-    corrected.Q.matrix[, j] <- 1
+    corrected.Q.matrix[, j] <- 1 # Dummy coding, so product of row is unaffected for column j
     Q.products <- apply(X = corrected.Q.matrix, MARGIN = 1, FUN = prod)
-    # Q.products <- apply(X = Q.matrix, MARGIN = 1, FUN = prod)
-    
     private.alleles[j] <- sum(P.matrix[, j] * Q.products)
   }
 
-  # Old, slow implementation:
-  private.alleles.slow <- numeric(ncol(N))
-  # Considerable duplication of efforts here, since the Q.matrix need only be 
-  # computed once for a given value of g, yet it gets re-calculated j times
-  # Would be better to create a matrix of Pijg values here, and a corresponding
-  # Q matrix, then pick & choose from them as appropriate to fill the vector 
-  # of private allele estimates
-  for (j in 1:ncol(N)) {
-    private.alleles.slow[j] <- calcPrivate(N = N, g = g, j = j)
-  }
-  
-  return(list(fast = private.alleles, slow = private.alleles.slow))
+  return(private.alleles)
 }
