@@ -64,7 +64,7 @@ calcP.v <- function(N.col, g) {
 #' @description Calculates allele richness for a rarefied sample of size 
 #'   \code{g}
 #' @return Allele richness in a single population rarefied to size \code{g}
-calcRichness.v <- function(N.col, g) {
+calcRichness <- function(N.col, g) {
   sum.richness <- sum(calcP.v(N.col = N.col, g = g))
   return(sum.richness)
 }
@@ -80,7 +80,7 @@ calcRichness.v <- function(N.col, g) {
 #' @return A vector of allele richness, where each element is the richness for 
 #'   a single population indexed by columns in \code{N}
 calcRichness.all <- function(N, g) {
-  all.rich <- apply(X = N, MARGIN = 2, FUN = function(x) {calcRichness.v(N.col = x, g = g)})
+  all.rich <- apply(X = N, MARGIN = 2, FUN = function(x) {calcRichness(N.col = x, g = g)})
   return(all.rich)
 }
 

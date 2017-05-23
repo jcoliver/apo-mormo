@@ -29,8 +29,8 @@ calcP.v(N.col = N.matrix[1, 2], g = 2)
 calcP.v(N.col = N.matrix[2, 2], g = 2)
 
 # Allele richness for individual populations
-calcRichness.v(N.col = N.matrix[, 1], 4)
-calcRichness.v(N.col = N.matrix[, 2], 4)
+calcRichness(N.col = N.matrix[, 1], 4)
+calcRichness(N.col = N.matrix[, 2], 4)
 
 # Allele richness for each population
 calcRichness.all(N = N.matrix, g = 2)
