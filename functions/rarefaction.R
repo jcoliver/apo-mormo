@@ -9,14 +9,19 @@
 # richness and private allele frequency
 
 ################################################################################
-#' Probability of not observing alleles in single population given sample of g 
-#'   genes
+#' Probability of allele absence in rarefied sample
 #' @param N.col vector of allele counts for a single population
 #' @param g gene sample size; generally the number of haploids or twice the 
 #'   number of diploid individuals in the smallest population sample size
 #' @description Calculates the probability of not observing each allele in a 
 #'   given population for a rarefied sample of size \code{g}
 #' @return vector of probabilities for single population
+#' @examples 
+#' N.matrix <- matrix(data = c(3, 6, 1, 0), nrow = 2, ncol = 2, byrow = TRUE)
+#' # Allele probabilities for population 1 given sample of 2 genes
+#' calcQ.v(N.col = N.matrix[, 1], g = 2)
+#' # Allele probabilities for population 2 given sample of 4 genes
+#' calcQ.v(N.col = N.matrix[, 2], g = 4)
 calcQ.v <- function(N.col, g) {
   if(length(N.col) < 2 || sum(N.col) == 0 || sum(N.col) < g) {
     return(rep(x = NA, times = length(N.col)))
@@ -44,13 +49,19 @@ calcQ.v <- function(N.col, g) {
 }
 
 ################################################################################
-#' Rarefied allele probability
+#' Probability of allele presence in rarefied sample
 #' @param N.col vector of allele counts for a single population
 #' @param g gene sample size; generally the number of haploids or twice the 
 #'   number of diploid individuals in the smallest population sample size
 #' @description Calculates the probability of observing each allele in a given 
 #'   population for a rarefied sample of size \code{g}
 #' @return vector of probabilities for single population
+#' @examples 
+#' N.matrix <- matrix(data = c(3, 6, 1, 0), nrow = 2, ncol = 2, byrow = TRUE)
+#' # Allele probabilities for population 1 given sample of 2 genes
+#' calcP.v(N.col = N.matrix[, 1], g = 2)
+#' # Allele probabilities for population 2 given sample of 4 genes
+#' calcP.v(N.col = N.matrix[, 2], g = 4)
 calcP.v <- function(N.col, g) {
   prob <- 1 - calcQ.v(N.col = N.col, g = g)
   return(prob)
@@ -64,6 +75,12 @@ calcP.v <- function(N.col, g) {
 #' @description Calculates allele richness for a rarefied sample of size 
 #'   \code{g}
 #' @return Allele richness in a single population rarefied to size \code{g}
+#' @examples 
+#' N.matrix <- matrix(data = c(3, 6, 1, 0), nrow = 2, ncol = 2, byrow = TRUE)
+#' # Allele richness for population 1 given sample of 2 genes
+#' calcRichness.all(N.col = N.matrix[, 1], g = 2)
+#' # Allele richness for population 2 given sample of 4 genes
+#' calcRichness.all(N.col = N.matrix[, 2], g = 4)
 calcRichness <- function(N.col, g) {
   sum.richness <- sum(calcP.v(N.col = N.col, g = g))
   return(sum.richness)
@@ -79,6 +96,10 @@ calcRichness <- function(N.col, g) {
 #'   \code{g}
 #' @return A vector of allele richness, where each element is the richness for 
 #'   a single population indexed by columns in \code{N}
+#' @examples 
+#' N.matrix <- matrix(data = c(3, 6, 1, 0), nrow = 2, ncol = 2, byrow = TRUE)
+#' # Allele richness for all populations given sample of 4 genes
+#' calcRichness.all(N = N.matrix, g = 4)
 calcRichness.all <- function(N, g) {
   all.rich <- apply(X = N, MARGIN = 2, FUN = function(x) {calcRichness(N.col = x, g = g)})
   return(all.rich)
@@ -91,7 +112,16 @@ calcRichness.all <- function(N, g) {
 #' @param g gene sample size; generally the number of haploids or twice the 
 #'   number of diploid individuals in the smallest population sample size
 #' @param j index of the population for which to perform calculations
-#'
+#' @description Calculates the expected number of private alleles in population
+#' \code{j} given a sample of \code{g} genes
+#' @return A vector of length 1, with the expected number of private alleles for
+#' the given population
+#' @examples 
+#' N.matrix <- matrix(data = c(3, 6, 1, 0), nrow = 2, ncol = 2, byrow = TRUE)
+#' # Private alleles in population 1, for a sample size of 2 genes
+#' calcPrivate(N = N.matrix, g = 2, j = 1)
+#' # Private alleles in population 2, for a sample size of 4 genes
+#' calcPrivate(N = N.matrix, g = 4, j = 2)
 calcPrivate <- function(N, g, j) {
   # sum over all alleles
   # Pijg * [(]prod from j'=1 to J, j' != j (Qij'g)]
@@ -116,7 +146,14 @@ calcPrivate <- function(N, g, j) {
 #'   and populations as columns
 #' @param g gene sample size; generally the number of haploids or twice the 
 #'   number of diploid individuals in the smallest population sample size
-#' 
+#' @description Calculates the expected number of private alleles for a sample 
+#' of \code{g} genes
+#' @return A vector of \code{nrow(N)}, with the expected number of private 
+#' alleles for each population
+#' @examples 
+#' N.matrix <- matrix(data = c(3, 6, 1, 0), nrow = 2, ncol = 2, byrow = TRUE)
+#' # Private alleles for sample of 2 genes
+#' calcPrivate.all(N = N.matrix, g = 2)
 calcPrivate.all <- function(N, g) {
   
   # Both P and Q matrix have alleles in rows, and populations in columns
