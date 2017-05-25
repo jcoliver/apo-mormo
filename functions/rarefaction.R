@@ -102,6 +102,8 @@ calcRichness <- function(N.col, g) {
 #' calcRichness.all(N = N.matrix, g = 4)
 calcRichness.all <- function(N, g) {
   all.rich <- apply(X = N, MARGIN = 2, FUN = function(x) {calcRichness(N.col = x, g = g)})
+  # Preserve population names if they exist in N
+  names(all.rich) <- colnames(N)
   return(all.rich)
 }
 
@@ -184,5 +186,7 @@ calcPrivate.all <- function(N, g) {
     private.alleles[j] <- sum(P.matrix[, j] * Q.products)
   }
 
+  # Preserve population names if they exist in N
+  names(private.alleles) <- colnames(x = N)
   return(private.alleles)
 }
