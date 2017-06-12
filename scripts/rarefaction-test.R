@@ -8,7 +8,9 @@ rm(list = ls())
 
 source(file = "functions/rarefaction.R")
 
-## TESTS
+################################################################################
+## TEST 1
+## two alleles, two populations
 N.matrix <- matrix(data = c(3, 6, 1, 0), nrow = 2, ncol = 2, byrow = TRUE)
 
 # Prob allele *not* found
@@ -44,12 +46,14 @@ calcPrivate(N = N.matrix, g = 2, j = 2)
 calcPrivate(N = N.matrix, g = 4, j = 2)
 
 # Private alleles for all populations
-source(file = "functions/rarefaction.R")
 calcPrivate.all(N = N.matrix, g = 2)
 calcPrivate.all(N = N.matrix, g = 4)
 
-
+################################################################################
+## TEST 2
+## three alleles, four populations
 source(file = "functions/rarefaction.R")
+
 N.matrix <- matrix(data = c(3, 6, 4, 0, 
                             3, 0, 0, 0, 
                             0, 0, 0, 4), nrow = 3, ncol = 4, byrow = TRUE)
@@ -68,3 +72,85 @@ calcP.v(N.col = N.matrix[, 1], g = 2)
 calcP.v(N.col = N.matrix[, 1], g = 4)
 calcP.v(N.col = N.matrix[, 2], g = 2)
 calcP.v(N.col = N.matrix[, 2], g = 4)
+
+################################################################################
+## TEST 3
+## Work on genotype data
+source(file = "functions/rarefaction.R")
+
+# Can create N.matrix from using table on a data frame
+# Example:
+locus.data <- data.frame(pop = c(rep(x = 1, times = 6), rep(x = 2, times = 6), rep(x = 3, times = 4), rep(x = 4, times = 4)),
+                         allele = c(rep(x = "10", times = 3), rep(x = "11", times = 3), rep(x = "10", times = 6), rep(x = "10", times = 4), rep(x = "12", times = 4)))
+N.matrix <- t(unclass(table(locus.data)))
+calcPrivate.all(N = N.matrix, g = 2)
+calcPrivate.all(N = N.matrix, g = 4)
+calcRichness.all(N = N.matrix, g = 2)
+calcRichness.all(N = N.matrix, g = 4)
+
+################################################################################
+## TEST 3
+## Work on real data, extracted from genind object
+source(file = "functions/rarefaction.R")
+genind.file = "output/genind-object.RData"
+load(file = genind.file) # apo.str.genind
+
+# Grab some data for testing (using a list not an S4 object)
+test.data = list()
+test.data$tab <- apo.str.genind@tab[1:15, 1:20]
+test.data$loc.fac <- factor(apo.str.genind@loc.fac[1:20])
+test.data$pop <- factor(apo.str.genind@pop[1:15])
+
+# Get allele x pop matrix for first locus
+locus.data <- test.data$tab[, 1:2]
+locus.pop <- test.data$pop
+locus.fac <- factor(test.data$loc.fac[1:2])
+# Need to use split-apply-combine somehow
+# See SC lesson: http://swcarpentry.github.io/r-novice-gapminder/12-plyr/
+
+# Split on population
+# Apply is allele count
+# Combine is back into matrix
+
+# Split on population
+# Apply is allele count
+# Doing for one population
+pop.1 <- levels(locus.pop)[1]
+pop.1.data <- locus.data[locus.pop == pop.1, ]
+pop.1.allele.counts <- colSums(pop.1.data)
+
+# Combine is back into matrix
+
+
+
+#' Now we need a means of getting that kind of data frame extracted from genind
+#' object. Ultimately want: alleles x pop
+#'        pop
+#' allele 1 2 3 4
+#'     10 3 6 4 0
+#'     11 3 0 0 0
+#'     12 0 0 0 4
+#' The two things to look at are:
+#' genind@tab: a table of individual genotype counts
+#' apo.str.genind@tab[1:10, 1:6]
+#            L0001.10 L0001.12 L0002.13 L0002.11 L0003.13 L0003.11
+# HullMtn_48        2        0        2        0        2        0
+# HullMtn_50        2        0        2        0        2        0
+# HullMtn_51        2        0        2        0        2        0
+# HullMtn_52        2        0        2        0        2        0
+# HullMtn_53        2        0        2        0        2        0
+# HullMtn_54        2        0        2        0        2        0
+# HullMtn_55        2        0        2        0        2        0
+# Ladoga_82         2        0        2        0        2        0
+# Ladoga_83         2        0        2        0        2        0
+# Ladoga_85         2        0        2        0        2        0
+#' The locus values can be seen via genind@loc.fac:
+#' L0001 L0001 L0002 L0002 L0003 L0003
+#' These are indexed in the same order as columns appear in genind@tab
+#' genind@pop: a vector of type factor indicating population membership; it is 
+#' indexed identically to the rows of genind@tab
+#' apo.str.genind@pop[1:10]
+# 1  2  3  4  5  6  7  8  9 10 
+# 1  1  1  1  1  1  1  2  2  2 
+# Levels: 1 11 12 13 14 2 3 4 5 6 7 8 9
+

@@ -1,6 +1,8 @@
 # Analyses for _Apodemia mormo_ project
 ## Last update: 2016-11-01
 
+## WOEFULLY OUT OF DATE
+
 ## Three folders included in the repo:
 1. data: the source data for analyses
 2. functions: R functions
