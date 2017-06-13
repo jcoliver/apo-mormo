@@ -235,8 +235,68 @@ for (locus.index in 1:length(levels(test.data$loc.fac))){
 ## TEST 6
 ## Subset of loci for all individuals, looping over all loci
 
+source(file = "functions/rarefaction.R")
+genind.file = "output/genind-object.RData"
+load(file = genind.file) # apo.str.genind
 
+# Subset data for testing (using a list not an S4 object)
+test.data = list()
+test.data$tab <- apo.str.genind@tab[, 1:20]
+test.data$loc.fac <- factor(apo.str.genind@loc.fac[1:20])
+test.data$pop <- factor(apo.str.genind@pop)
 
+# Establish matrices that will hold the final results
+richness.matrix <- matrix(data = 0, 
+                          nrow = length(levels(test.data$loc.fac)),
+                          ncol = length(levels(test.data$pop)))
+
+private.matrix <- matrix(data = 0, 
+                         nrow = length(levels(test.data$loc.fac)),
+                         ncol = length(levels(test.data$pop)))
+
+colnames(richness.matrix) <- colnames(private.matrix) <- as.character(levels(test.data$pop))
+rownames(richness.matrix) <- rownames(private.matrix) <- as.character(levels(test.data$loc.fac))
+
+# Loop over each locus, doing richness and private calculations for each
+for (locus.index in 1:length(levels(test.data$loc.fac))){
+  # Extract the name of the current locus
+  locus.id <- levels(test.data$loc.fac)[locus.index]
+  # Subset data for that one locus
+  locus.data <- as.data.frame(test.data$tab[, test.data$loc.fac == locus.id])
+  # TODO: This needs only happen once?
+  locus.data$pop <- test.data$pop
+  
+  # Do the allele counts for the locus
+  allele.counts <- locus.data %>% 
+    group_by(pop) %>% 
+    summarize_all(funs(sum), na.rm = TRUE)
+  
+  # Pull out counts (first column is pop id)
+  count.matrix <- as.matrix(allele.counts[, c(2:ncol(allele.counts))])
+  
+  # Set row names from values of pop (odd syntax to extract one column 
+  # from the allele.counts tibble)
+  rownames(count.matrix) <- as.character(allele.counts[[1]])
+  colnames(count.matrix) <- gsub(pattern = paste0(as.character(locus.id), "."),
+                                 replacement = "", 
+                                 x = colnames(count.matrix))
+  
+  # Transpose for appropriate allele x pop format needed by functions
+  N.matrix <- t(count.matrix)
+  richness.matrix[locus.index, ] <- calcRichness.all(N = N.matrix, g = 14)
+  private.matrix[locus.index, ] <- calcPrivate.all(N = N.matrix, g = 14)
+  
+}
+
+################################################################################
+## TEST 7
+## Investigating troublesome populations 9, 11, 12, 13
+
+################################################################################
+## TEST 8
+## Subset of loci for all individuals, looping over all loci using function
+
+rarefied.data <- rarefiedMatrices(data = test.data, g = 6)
 
 #' Now we need a means of getting that kind of data frame extracted from genind
 #' object. Ultimately want: alleles x pop

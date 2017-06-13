@@ -190,3 +190,57 @@ calcPrivate.all <- function(N, g) {
   names(private.alleles) <- colnames(x = N)
   return(private.alleles)
 }
+
+
+################################################################################
+#' Private allele and allele richness for all loci and all populations
+#' 
+rarefiedMatrices <- function(data, g = 2) {
+  if (!require("dplyr")) {
+    stop("rarefiedMatrices requires the dplyr package.")
+  }
+  
+  # Establish matrices that will hold the final results
+  richness.matrix <- matrix(data = 0, 
+                            nrow = length(levels(data$loc.fac)),
+                            ncol = length(levels(data$pop)))
+  
+  private.matrix <- matrix(data = 0, 
+                           nrow = length(levels(data$loc.fac)),
+                           ncol = length(levels(data$pop)))
+  
+  colnames(richness.matrix) <- colnames(private.matrix) <- as.character(levels(data$pop))
+  rownames(richness.matrix) <- rownames(private.matrix) <- as.character(levels(data$loc.fac))
+  
+  # Loop over each locus, doing richness and private calculations for each
+  for (locus.index in 1:length(levels(data$loc.fac))){
+    # Extract the name of the current locus
+    locus.id <- levels(data$loc.fac)[locus.index]
+    # Subset data for that one locus
+    locus.data <- as.data.frame(data$tab[, data$loc.fac == locus.id])
+    # TODO: This needs only happen once?
+    locus.data$pop <- data$pop
+    
+    # Do the allele counts for the locus
+    allele.counts <- locus.data %>% 
+      group_by(pop) %>% 
+      summarize_all(funs(sum), na.rm = TRUE)
+    
+    # Pull out counts (first column is pop id)
+    count.matrix <- as.matrix(allele.counts[, c(2:ncol(allele.counts))])
+    
+    # Set row names from values of pop (odd syntax to extract one column 
+    # from the allele.counts tibble)
+    rownames(count.matrix) <- as.character(allele.counts[[1]])
+    colnames(count.matrix) <- gsub(pattern = paste0(as.character(locus.id), "."),
+                                   replacement = "", 
+                                   x = colnames(count.matrix))
+    
+    # Transpose for appropriate allele x pop format needed by functions
+    N.matrix <- t(count.matrix)
+    richness.matrix[locus.index, ] <- calcRichness.all(N = N.matrix, g = 14)
+    private.matrix[locus.index, ] <- calcPrivate.all(N = N.matrix, g = 14)
+    return(list(richness = richness.matrix, private = private.matrix))
+  }
+  
+}
