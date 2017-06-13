@@ -101,25 +101,83 @@ test.data$tab <- apo.str.genind@tab[1:15, 1:20]
 test.data$loc.fac <- factor(apo.str.genind@loc.fac[1:20])
 test.data$pop <- factor(apo.str.genind@pop[1:15])
 
+# Get allele x pop matrix for locus 9
+locus.data <- as.data.frame(test.data$tab[, 17:18])
+locus.data$pop <- test.data$pop
+locus.fac <- factor(test.data$loc.fac[17:18])
+locus.id <- unique(test.data$loc.fac[17:18])
+
+library("dplyr")
+
+# Get counts for each column (allele) of the data
+allele.counts <- locus.data %>% 
+  group_by(pop) %>% 
+  summarize_all(funs(sum), na.rm = TRUE)
+
+# Pull out counts (first column is pop id)
+count.matrix <- as.matrix(allele.counts[, c(2:ncol(allele.counts))])
+
+# Set row names from values of pop (odd syntax to extract one column 
+# from the allele.counts tibble)
+rownames(count.matrix) <- as.character(allele.counts[[1]])
+colnames(count.matrix) <- gsub(pattern = paste0(as.character(locus.id), "."),
+                                replacement = "", 
+                                x = colnames(count.matrix))
+
+N.matrix <- t(count.matrix)
+private <- calcPrivate.all(N = N.matrix, g = 14)
+richness <- calcRichness.all(N = N.matrix, g = 14)
+# Eventually give the rowname based on locus.id
+# rownames(private) <- rownames(richness) <- locus.id
+
+# Now want this for every locus, add row to matrix for each locus
+
+################################################################################
+## TEST 4
+## Work on larger set of real data, extracted from genind object
+source(file = "functions/rarefaction.R")
+genind.file = "output/genind-object.RData"
+load(file = genind.file) # apo.str.genind
+
+# Grab some data for testing (using a list not an S4 object)
+test.data = list()
+test.data$tab <- apo.str.genind@tab[1:35, 1:20]
+test.data$loc.fac <- factor(apo.str.genind@loc.fac[1:20])
+test.data$pop <- factor(apo.str.genind@pop[1:35])
+
 # Get allele x pop matrix for first locus
-locus.data <- test.data$tab[, 1:2]
-locus.pop <- test.data$pop
+locus.data <- as.data.frame(test.data$tab[, 1:2])
+locus.data$pop <- test.data$pop
 locus.fac <- factor(test.data$loc.fac[1:2])
-# Need to use split-apply-combine somehow
-# See SC lesson: http://swcarpentry.github.io/r-novice-gapminder/12-plyr/
+locus.id <- unique(test.data$loc.fac[1:2])
 
-# Split on population
-# Apply is allele count
-# Combine is back into matrix
+library("dplyr")
 
-# Split on population
-# Apply is allele count
-# Doing for one population
-pop.1 <- levels(locus.pop)[1]
-pop.1.data <- locus.data[locus.pop == pop.1, ]
-pop.1.allele.counts <- colSums(pop.1.data)
+# Get counts for each column (allele) of the data
+allele.counts <- locus.data %>% 
+  group_by(pop) %>% 
+  summarize_all(funs(sum))
 
-# Combine is back into matrix
+# Pull out counts (first column is pop id)
+count.matrix <- as.matrix(allele.counts[, c(2:ncol(allele.counts))])
+
+# Set row names from values of pop (odd syntax to extract one column 
+# from the allele.counts tibble)
+rownames(count.matrix) <- as.character(allele.counts[[1]])
+colnames(count.matrix) <- gsub(pattern = paste0(as.character(locus.id), "."),
+                               replacement = "", 
+                               x = colnames(count.matrix))
+
+N.matrix <- t(count.matrix)
+private <- calcPrivate.all(N = N.matrix, g = 14)
+richness <- calcRichness.all(N = N.matrix, g = 14)
+# Eventually give the rowname based on locus.id
+# rownames(private) <- rownames(richness) <- locus.id
+
+################################################################################
+## TEST 4
+## Work on larger set of real data, extracted from genind object
+
 
 
 
