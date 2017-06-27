@@ -166,6 +166,8 @@ calcPrivate.all <- function(N, g) {
   P.matrix <- apply(X = N, MARGIN = 2, FUN = function(x) {calcP.v(N.col = x, g = g)})
   Q.matrix <- apply(X = N, MARGIN = 2, FUN = function(x) {calcQ.v(N.col = x, g = g)})
   
+  cat("calcPrivate.all: ", "\n", colnames(N), "\n", sep = "")
+  
   # Private allele calculation:
   #' For population 1, it is the sum of (three alleles, four populations):
   #' P114 x (Q124 x Q134 x Q144)

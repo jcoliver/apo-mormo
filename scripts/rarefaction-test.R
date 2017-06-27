@@ -291,6 +291,82 @@ for (locus.index in 1:length(levels(test.data$loc.fac))){
 ################################################################################
 ## TEST 7
 ## Investigating troublesome populations 9, 11, 12, 13
+source(file = "functions/rarefaction.R")
+genind.file = "output/genind-object.RData"
+load(file = genind.file) # apo.str.genind
+library("dplyr")
+
+pops <- c(1, 9, 11, 12, 13)
+pop.rows <- which(as.integer(as.character(apo.str.genind@pop)) %in% pops)
+
+# Subset data for testing (using a list not an S4 object)
+test.data = list()
+test.data$tab <- apo.str.genind@tab[pop.rows, 1:20]
+test.data$loc.fac <- factor(apo.str.genind@loc.fac[1:20])
+test.data$pop <- factor(apo.str.genind@pop[pop.rows])
+
+# Establish matrices that will hold the final results
+richness.matrix <- matrix(data = 0, 
+                          nrow = length(levels(test.data$loc.fac)),
+                          ncol = length(levels(test.data$pop)))
+
+private.matrix <- matrix(data = 0, 
+                         nrow = length(levels(test.data$loc.fac)),
+                         ncol = length(levels(test.data$pop)))
+
+colnames(richness.matrix) <- colnames(private.matrix) <- as.character(levels(test.data$pop))
+rownames(richness.matrix) <- rownames(private.matrix) <- as.character(levels(test.data$loc.fac))
+
+# Loop over each locus, doing richness and private calculations for each
+for (locus.index in 1:length(levels(test.data$loc.fac))){
+  # Extract the name of the current locus
+  locus.id <- levels(test.data$loc.fac)[locus.index]
+  # Subset data for that one locus
+  locus.data <- as.data.frame(test.data$tab[, test.data$loc.fac == locus.id])
+  locus.data$pop <- test.data$pop
+  
+  # Do the allele counts for the locus
+  allele.counts <- locus.data %>% 
+    group_by(pop) %>% 
+    summarize_all(funs(sum), na.rm = TRUE)
+  
+  # Pull out counts (first column is pop id)
+  count.matrix <- as.matrix(allele.counts[, c(2:ncol(allele.counts))])
+  
+  # Set row names from values of pop (odd syntax to extract one column 
+  # from the allele.counts tibble)
+  rownames(count.matrix) <- as.character(allele.counts[[1]])
+  colnames(count.matrix) <- gsub(pattern = paste0(as.character(locus.id), "."),
+                                 replacement = "", 
+                                 x = colnames(count.matrix))
+  
+  # Transpose for appropriate allele x pop format needed by functions
+  N.matrix <- t(count.matrix)
+  # cat("Locus: ", as.character(locus.id), "\n", sep = "")
+  # print(colnames(N.matrix))
+  richness.matrix[locus.index, ] <- calcRichness.all(N = N.matrix, g = 6) # 14
+  private.matrix[locus.index, ] <- calcPrivate.all(N = N.matrix, g = 6) # 14
+}
+
+# What causes NAs in the output matrices?
+# g is greater than # of samples
+# In richness, manifests as NA for any population with fewer sampled genes than 
+# g
+# In private, manifests as NA for *all* populations for a locus with fewer 
+# sampled genes in *any* population
+# Example:
+# with populations 1, 9, 11, 12, 13 and loci 1-10, g = 6
+# population 13 has 0 samples for loci 5-10
+# Richness has NA for population 13 loci 5-10
+# Richness has NA for ALL POPULATIONS in loci 5-10
+
+# Solution? If a population has fewer than g samples, it should 
+# 1. Just have value of NA for richness calculation (already works this way)
+# 2. Not be considered in private allele calculations (does not work this way)
+
+################################################################################
+#########   TODO: SPLIT TESTS INTO INDIVIDUAL FILES TO RUN AS SOURCE   #########
+################################################################################
 
 ################################################################################
 ## TEST 8
