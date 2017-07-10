@@ -40,7 +40,7 @@ test.data$tab <- apo.str.genind@tab[pop.rows, 1:20]
 test.data$loc.fac <- factor(apo.str.genind@loc.fac[1:20])
 test.data$pop <- factor(apo.str.genind@pop[pop.rows])
 
-rarefied.values <- rarefiedMatrices(data = test.data, g = 6)
+rarefied.values <- rarefiedMatrices(data = test.data, g = 14)
 richness.matrix <- rarefied.values$richness
 private.matrix <- rarefied.values$private
 
@@ -50,12 +50,19 @@ richness.test <- c(1, 1, 1, 1, 1, 1, 1, 1, 2, 1,
                    1, 1, 1, 1, NA, NA, NA, NA, NA, NA,
                    NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
                    NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
+private.test <- c(0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 
+                  NA, NA, NA, NA, 1, 0, 1, 0, 0, 1,
+                  0, 0, 0, 0, NA, NA, NA, NA, NA, NA,
+                  NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
+                  NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
 ################################################################################
 richness.matrix <- round(x = richness.matrix, digits = 3)
 richness.test <- round(x = richness.test, digits = 3)
+private.matrix <- round(x = private.matrix, digits = 3)
+private.test <- round(x = private.test, digits = 3)
 
 pass <- all(as.vector(richness.matrix) == richness.test, na.rm = TRUE) &
-  all(is.na(private.matrix))
+  all(as.vector(private.matrix) == private.test, na.rm = TRUE)
 
 cat("Test 10 pass = ", pass, "\n", sep = "")
 

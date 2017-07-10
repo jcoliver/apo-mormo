@@ -157,14 +157,18 @@ calcPrivate <- function(N, g, j) {
 #' # Private alleles for sample of 2 genes
 #' calcPrivate.all(N = N.matrix, g = 2)
 calcPrivate.all <- function(N, g) {
-  
+  # Start by reducing matrix to only those populations with at least g sampled 
+  # genes
+  cols.keep <- which(colSums(x = N, na.rm = TRUE) >= g)
+  N.analyze <- N[, cols.keep]
+
   # Both P and Q matrix have alleles in rows, and populations in columns
   #' P114 P124 P134 P144
   #' P214 P224 P234 P244
   #' P314 P324 P334 P344
   #' P414 P424 P434 P444
-  P.matrix <- apply(X = N, MARGIN = 2, FUN = function(x) {calcP.v(N.col = x, g = g)})
-  Q.matrix <- apply(X = N, MARGIN = 2, FUN = function(x) {calcQ.v(N.col = x, g = g)})
+  P.matrix <- apply(X = N.analyze, MARGIN = 2, FUN = function(x) {calcP.v(N.col = x, g = g)})
+  Q.matrix <- apply(X = N.analyze, MARGIN = 2, FUN = function(x) {calcQ.v(N.col = x, g = g)})
   
   # Private allele calculation:
   #' For population 1, it is the sum of (three alleles, four populations):
@@ -178,17 +182,22 @@ calcPrivate.all <- function(N, g) {
   #' P324 x (Q314 x Q334 x Q344)
 
   # private allele count vector; each element corresponds to a population
-  private.alleles <- numeric(ncol(N))
-  for (j in 1:ncol(N)) {
+  private.alleles <- numeric(ncol(N.analyze))
+  for (j in 1:ncol(N.analyze)) {
     corrected.Q.matrix <- Q.matrix
     corrected.Q.matrix[, j] <- 1 # Dummy coding, so product of row is unaffected for column j
     Q.products <- apply(X = corrected.Q.matrix, MARGIN = 1, FUN = prod)
     private.alleles[j] <- sum(P.matrix[, j] * Q.products)
   }
 
+  # Now we need a vector of length equivalent to the original number of columns in N,
+  # including those with too few sampled genes
+  private.alleles.return <- rep(NA, times = ncol(N))
+  private.alleles.return[cols.keep] <- private.alleles
+  
   # Preserve population names if they exist in N
-  names(private.alleles) <- colnames(x = N)
-  return(private.alleles)
+  names(private.alleles.return) <- colnames(x = N)
+  return(private.alleles.return)
 }
 
 
@@ -238,8 +247,8 @@ rarefiedMatrices <- function(data, g = 2) {
     
     # Transpose for appropriate allele x pop format needed by functions
     N.matrix <- t(count.matrix)
-    richness.matrix[locus.index, ] <- calcRichness.all(N = N.matrix, g = 14)
-    private.matrix[locus.index, ] <- calcPrivate.all(N = N.matrix, g = 14)
+    richness.matrix[locus.index, ] <- calcRichness.all(N = N.matrix, g = g)
+    private.matrix[locus.index, ] <- calcPrivate.all(N = N.matrix, g = g)
   }
   return(list(richness = richness.matrix, private = private.matrix))
 }
