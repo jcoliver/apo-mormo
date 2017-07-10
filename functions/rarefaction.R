@@ -240,7 +240,6 @@ rarefiedMatrices <- function(data, g = 2) {
     N.matrix <- t(count.matrix)
     richness.matrix[locus.index, ] <- calcRichness.all(N = N.matrix, g = 14)
     private.matrix[locus.index, ] <- calcPrivate.all(N = N.matrix, g = 14)
-    return(list(richness = richness.matrix, private = private.matrix))
   }
-  
+  return(list(richness = richness.matrix, private = private.matrix))
 }
