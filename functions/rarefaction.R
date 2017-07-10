@@ -125,6 +125,9 @@ calcRichness.all <- function(N, g) {
 #' # Private alleles in population 2, for a sample size of 4 genes
 #' calcPrivate(N = N.matrix, g = 4, j = 2)
 calcPrivate <- function(N, g, j) {
+  # TODO: update to mirror calcPrivate.all treatment of populations with 
+  # sampling below g; will affect *all* populations if any one population
+  # has fewer than g genes sampled
   # sum over all alleles
   # Pijg * [(]prod from j'=1 to J, j' != j (Qij'g)]
   m <- nrow(N)
@@ -190,8 +193,8 @@ calcPrivate.all <- function(N, g) {
     private.alleles[j] <- sum(P.matrix[, j] * Q.products)
   }
 
-  # Now we need a vector of length equivalent to the original number of columns in N,
-  # including those with too few sampled genes
+  # Now we need a vector of length equivalent to the original number of columns 
+  # in N, including those with too few sampled genes
   private.alleles.return <- rep(NA, times = ncol(N))
   private.alleles.return[cols.keep] <- private.alleles
   
