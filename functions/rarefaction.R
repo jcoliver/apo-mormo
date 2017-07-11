@@ -164,40 +164,42 @@ calcPrivate.all <- function(N, g) {
   # genes
   cols.keep <- which(colSums(x = N, na.rm = TRUE) >= g)
   N.analyze <- N[, cols.keep]
-
-  # Both P and Q matrix have alleles in rows, and populations in columns
-  #' P114 P124 P134 P144
-  #' P214 P224 P234 P244
-  #' P314 P324 P334 P344
-  #' P414 P424 P434 P444
-  P.matrix <- apply(X = N.analyze, MARGIN = 2, FUN = function(x) {calcP.v(N.col = x, g = g)})
-  Q.matrix <- apply(X = N.analyze, MARGIN = 2, FUN = function(x) {calcQ.v(N.col = x, g = g)})
-  
-  # Private allele calculation:
-  #' For population 1, it is the sum of (three alleles, four populations):
-  #' P114 x (Q124 x Q134 x Q144)
-  #' P214 x (Q224 x Q234 x Q244)
-  #' P314 x (Q324 x Q334 x Q344)
-  #' 
-  #' For population 2, it is the sum of (three alleles, four populations):
-  #' P124 x (Q114 x Q134 x Q144)
-  #' P224 x (Q214 x Q234 x Q244)
-  #' P324 x (Q314 x Q334 x Q344)
-
-  # private allele count vector; each element corresponds to a population
-  private.alleles <- numeric(ncol(N.analyze))
-  for (j in 1:ncol(N.analyze)) {
-    corrected.Q.matrix <- Q.matrix
-    corrected.Q.matrix[, j] <- 1 # Dummy coding, so product of row is unaffected for column j
-    Q.products <- apply(X = corrected.Q.matrix, MARGIN = 1, FUN = prod)
-    private.alleles[j] <- sum(P.matrix[, j] * Q.products)
-  }
-
-  # Now we need a vector of length equivalent to the original number of columns 
-  # in N, including those with too few sampled genes
   private.alleles.return <- rep(NA, times = ncol(N))
-  private.alleles.return[cols.keep] <- private.alleles
   
+  if (is.matrix(N.analyze) && dim(N.analyze)[1] > 1) { # Need at least two populations for this calculation?
+    # Both P and Q matrix have alleles in rows, and populations in columns
+    #' P114 P124 P134 P144
+    #' P214 P224 P234 P244
+    #' P314 P324 P334 P344
+    #' P414 P424 P434 P444
+    P.matrix <- apply(X = N.analyze, MARGIN = 2, FUN = function(x) {calcP.v(N.col = x, g = g)})
+    Q.matrix <- apply(X = N.analyze, MARGIN = 2, FUN = function(x) {calcQ.v(N.col = x, g = g)})
+    
+    # Private allele calculation:
+    #' For population 1, it is the sum of (three alleles, four populations):
+    #' P114 x (Q124 x Q134 x Q144)
+    #' P214 x (Q224 x Q234 x Q244)
+    #' P314 x (Q324 x Q334 x Q344)
+    #' 
+    #' For population 2, it is the sum of (three alleles, four populations):
+    #' P124 x (Q114 x Q134 x Q144)
+    #' P224 x (Q214 x Q234 x Q244)
+    #' P324 x (Q314 x Q334 x Q344)
+    
+    # private allele count vector; each element corresponds to a population
+    private.alleles <- numeric(ncol(N.analyze))
+    for (j in 1:ncol(N.analyze)) {
+      corrected.Q.matrix <- Q.matrix
+      corrected.Q.matrix[, j] <- 1 # Dummy coding, so product of row is unaffected for column j
+      Q.products <- apply(X = corrected.Q.matrix, MARGIN = 1, FUN = prod)
+      private.alleles[j] <- sum(P.matrix[, j] * Q.products)
+    }
+    
+    # Now we need a vector of length equivalent to the original number of columns 
+    # in N, including those with too few sampled genes
+    private.alleles.return[cols.keep] <- private.alleles
+    
+  }  
   # Preserve population names if they exist in N
   names(private.alleles.return) <- colnames(x = N)
   return(private.alleles.return)
@@ -207,7 +209,7 @@ calcPrivate.all <- function(N, g) {
 ################################################################################
 #' Private allele and allele richness for all loci and all populations
 #' 
-rarefiedMatrices <- function(data, g = 2) {
+rarefiedMatrices <- function(data, g = 2, display.progress = FALSE) {
   if (!require("dplyr")) {
     stop("rarefiedMatrices requires the dplyr package.")
   }
@@ -224,8 +226,15 @@ rarefiedMatrices <- function(data, g = 2) {
   colnames(richness.matrix) <- colnames(private.matrix) <- as.character(levels(data$pop))
   rownames(richness.matrix) <- rownames(private.matrix) <- as.character(levels(data$loc.fac))
   
+  if (display.progress) {
+    progress.bar <- txtProgressBar(min = 1, max = length(levels(data$loc.fac)), style = 3)
+  }
   # Loop over each locus, doing richness and private calculations for each
   for (locus.index in 1:length(levels(data$loc.fac))){
+    if (display.progress) {
+      setTxtProgressBar(pb = progress.bar, value = locus.index)
+    }
+    
     # Extract the name of the current locus
     locus.id <- levels(data$loc.fac)[locus.index]
     # Subset data for that one locus
@@ -253,5 +262,6 @@ rarefiedMatrices <- function(data, g = 2) {
     richness.matrix[locus.index, ] <- calcRichness.all(N = N.matrix, g = g)
     private.matrix[locus.index, ] <- calcPrivate.all(N = N.matrix, g = g)
   }
+  close(progress.bar)
   return(list(richness = richness.matrix, private = private.matrix))
 }
