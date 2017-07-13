@@ -1,4 +1,4 @@
-# Private allele rarefaction develoment
+# Private allele rarefaction functions
 # Jeff Oliver
 # jcoliver@email.arizona.edu
 # 2017-05-16
@@ -208,7 +208,33 @@ calcPrivate.all <- function(N, g) {
 
 ################################################################################
 #' Private allele and allele richness for all loci and all populations
-#' 
+#' @param data list with information on allele counts; see 'Details'
+#' @param g gene sample size; generally the number of haploids or twice the 
+#'   number of diploid individuals in the smallest population sample size
+#' @param display.progress logical indicating whether or not to display a 
+#'   progress indicator bar
+#' @description Calculates the expected number of alleles and private alleles 
+#'   for a sample of \code{g} genes
+#' @return A list of two matrix elements: \code{richness}, which contains the 
+#'   estimated number of alleles in a rarefied sample for each population at 
+#'   each locus and \code{private}, which contains the estimated number of 
+#'   private alleles in a rarefied sample for each population at each locus
+#' @details Calculations are designed to act on the list \code{data}, which 
+#'   should have the following three elements: \code{tab}, a data frame of 
+#'   allele counts, most likely this will be the \code{@tab} element from an 
+#'   \code{adegenet::genind} object; \code{loc.fac}, a vector of type factor 
+#'   with the locus level for each column in \code{data$tab}; and \code{pop}, 
+#'   a vector of type factor with the population level for each row in 
+#'   \code{data$tab}
+#' @examples 
+#' \dontrun{
+#' # Use subset of data from genind object `genind.data`
+#' test.data = list()
+#' test.data$tab <- genind.data@tab[pop.rows, 1:20]
+#' test.data$loc.fac <- factor(genind.data@loc.fac[1:20])
+#' test.data$pop <- factor(genind.data@pop[pop.rows])
+#' rarefied.values <- rarefiedMatrices(data = test.data, g = 10, display.progress = TRUE)
+#' }
 rarefiedMatrices <- function(data, g = 2, display.progress = FALSE) {
   if (!require("dplyr")) {
     stop("rarefiedMatrices requires the dplyr package.")
