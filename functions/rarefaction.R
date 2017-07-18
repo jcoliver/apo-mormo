@@ -166,7 +166,7 @@ calcPrivate.all <- function(N, g) {
   N.analyze <- N[, cols.keep]
   private.alleles.return <- rep(NA, times = ncol(N))
   
-  if (is.matrix(N.analyze) && dim(N.analyze)[1] > 1) { # Need at least two populations for this calculation?
+  if (is.matrix(N.analyze) && dim(N.analyze)[1] > 1) {
     # Both P and Q matrix have alleles in rows, and populations in columns
     #' P114 P124 P134 P144
     #' P214 P224 P234 P244
@@ -252,6 +252,7 @@ rarefiedMatrices <- function(data, g = 2, display.progress = FALSE) {
   colnames(richness.matrix) <- colnames(private.matrix) <- as.character(levels(data$pop))
   rownames(richness.matrix) <- rownames(private.matrix) <- as.character(levels(data$loc.fac))
   
+  progress.bar <- NULL
   if (display.progress) {
     progress.bar <- txtProgressBar(min = 1, max = length(levels(data$loc.fac)), style = 3)
   }
@@ -288,6 +289,29 @@ rarefiedMatrices <- function(data, g = 2, display.progress = FALSE) {
     richness.matrix[locus.index, ] <- calcRichness.all(N = N.matrix, g = g)
     private.matrix[locus.index, ] <- calcPrivate.all(N = N.matrix, g = g)
   }
-  close(progress.bar)
+  if (!is.null(progress.bar)) {
+    close(progress.bar)
+  }
   return(list(richness = richness.matrix, private = private.matrix))
+}
+
+################################################################################
+#' Assess significance of permutation test
+permSignificance <- function(obs.data, perm.data) {
+  upper.tail <- TRUE
+  direction <- "High"
+  if (mean(perm.data) > obs.data) {
+    upper.tail <- FALSE
+    direction <- "Low"
+  }
+
+  beyond.count <- 0
+  if (upper.tail) {
+    beyond.count <- sum(perm.data > obs.data)
+  } else {
+    beyond.count <- sum(perm.data < obs.data)
+  }
+  p <- beyond.count/length(perm.data)
+  
+  return(list(p.value = p, direction = direction))
 }
