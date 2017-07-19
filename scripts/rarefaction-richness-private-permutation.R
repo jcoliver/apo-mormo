@@ -81,6 +81,8 @@ for (perm in 1:num.perm) {
                                 MARGIN = 2,
                                 FUN = sum,
                                 na.rm = TRUE)
+  rm(shuffle.data, shuffle.rarefied.values, 
+     shuffle.richness.matrix, shuffle.private.matrix)
 }
 
 ################################################################################
@@ -98,7 +100,14 @@ for (one.pop in 1:ncol(richness.perms)) {
   private.perm.result <- permSignificance(obs.data = private.sums[one.pop], private.perms[, one.pop])
   private.sig$direction[one.pop] <- private.perm.result$direction
   private.sig$p.value[one.pop] <- private.perm.result$p.value
+  rm(richness.perm.result, private.perm.result)
 }
 
-richness.sig
-private.sig
+sink(file = "output/rarefied-alleles-permutation.txt")
+cat("Permutation tests on allelic richness and private allele counts", "\n", sep = "")
+cat("Number of permutations: ", num.perm, "\n", sep = "")
+cat("\n***\n", "Allelic richness", "\n", "")
+print(richness.sig)
+cat("\n***\n", "Private alleles", "\n", "")
+print(private.sig)
+sink()
