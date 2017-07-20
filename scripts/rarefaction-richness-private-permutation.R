@@ -44,8 +44,8 @@ private.sums <- apply(X = private.matrix,
 
 ################################################################################
 # Loop to create distribution of sums
-num.perm <- 100
-print.freq <- 10
+num.perm <- 1000
+print.freq <- 50
 
 richness.perms <- matrix(data = 0, 
                          nrow = num.perm, 
