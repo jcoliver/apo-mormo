@@ -1,6 +1,7 @@
 #!/usr/bin/env python2.7
 
 # Convert structure-formatted file from single-line to two-line format
+# for use with fastStructure
 # Jeff Oliver
 # jcoliver@email.arizona.edu
 # 2016-09-30
