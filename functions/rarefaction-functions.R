@@ -297,6 +297,29 @@ rarefiedMatrices <- function(data, g = 2, display.progress = FALSE) {
 
 ################################################################################
 #' Assess significance of permutation test
+#' @param obs.data numeric vector of length one, with the observed value of the 
+#' statistic of interest
+#' @param perm.data numeric vector of data, presumably the output of 
+#' permutations
+#' @description Assesses significance of observed value (\code{obs.data}) based 
+#' on distribution of values in \code{perm.data}. 
+#' @return a list of two elements:
+#' \itemize{
+#'   \item{"p.value"}{Significance of observed value}
+#'   \item{"direction"}{Direction of significance, i.e. "High" or "Low"}
+#' }
+#' @Automatically determines whether to test upper or lower tail based on where 
+#' observed values lies relative to the mean of \code{perm.data}.
+#' #' @examples 
+#' \dontrun{
+#' # A contrived example to see if observed value is significantly different
+#' # from distribution in x.perm
+#' x.obs <- rnorm(n = 1, mean = 2, sd = 1)
+#' x.perm <- rnorm(n = 1000, mean = 0, sd = 1)
+#' significance <- permSignificance(obs.data = x.obs, perm.data = x.perm)
+#' significance$p.value
+#' significance$direction
+#' }
 permSignificance <- function(obs.data, perm.data) {
   upper.tail <- TRUE
   direction <- "High"
