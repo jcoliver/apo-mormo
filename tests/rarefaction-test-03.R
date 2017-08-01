@@ -5,7 +5,7 @@
 
 rm(list = ls())
 
-source(file = "functions/rarefaction.R")
+source(file = "functions/rarefaction-functions.R")
 
 ################################################################################
 # Can create N.matrix from using table on a data frame

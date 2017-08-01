@@ -7,7 +7,7 @@ rm(list = ls())
 
 library("adegenet")
 
-source(file = "functions/rarefaction.R")
+source(file = "functions/rarefaction-functions.R")
 genind.file = "output/genind-object.RData"
 load(file = genind.file) # apo.str.genind
 

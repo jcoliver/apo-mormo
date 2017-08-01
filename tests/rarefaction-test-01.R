@@ -5,7 +5,7 @@
 
 rm(list = ls())
 
-source(file = "functions/rarefaction.R")
+source(file = "functions/rarefaction-functions.R")
 
 ################################################################################
 # Set up data to use
