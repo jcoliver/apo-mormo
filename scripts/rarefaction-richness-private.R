@@ -7,7 +7,7 @@ rm(list = ls())
 
 library("adegenet")
 
-source(file = "functions/rarefaction.R")
+source(file = "functions/rarefaction-functions.R")
 genind.file = "output/genind-object.RData"
 load(file = genind.file) # apo.str.genind
 
@@ -38,3 +38,27 @@ private.means <- apply(X = private.matrix,
                       MARGIN = 2, 
                       FUN = mean, 
                       na.rm = TRUE)
+
+################################################################################
+# Extract population sd
+richness.sd <- apply(X = richness.matrix, 
+                     MARGIN = 2, 
+                     FUN = sd, 
+                     na.rm = TRUE)
+
+private.sd <- apply(X = private.matrix,
+                    MARGIN = 2, 
+                    FUN = sd, 
+                    na.rm = TRUE)
+
+################################################################################
+# Export to file
+write.table(x = data.frame(population = names(richness.means), 
+                           richness.means,
+                           richness.sd, 
+                           private.means, 
+                           private.sd),
+            file = "output/rarefied-alleles-observed.csv",
+            sep = ",",
+            row.names = FALSE,
+            quote = FALSE)
