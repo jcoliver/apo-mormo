@@ -1,5 +1,7 @@
 # Analyses for _Apodemia mormo_ project
-## Last update: 2017-07-31
+## Last update: 2017-08-01
+
+Assets that could be deleted are marked with [**DELETE**] 
 
 ## Three folders included in the repo:
 * data: the source data for analyses
@@ -17,8 +19,12 @@ analyses
 * Apo_localities.txt : a tab-delimited text file of localities with four 
 columns: pop.name, pop.number, latitude, longitude
 * Apodemia_0.9-noDockweiler-GNPSK.str : STRUCTURE-formatted (one-line) file 
-excluding specimens from Dockweiler and Grasslands National Park populations 
-(same data as in Apodemia_0.9miss.str sans specimens from those two populations)
+excluding specimens from Dockweiler and Grasslands National Park populations; 
+same data as in Apodemia_0.9miss.str sans specimens from those two populations,
+produced via `grep -v "Dockweiler" Apodemia_0.9miss.str | grep -v "NPSK" > Apodemia_0.9-noDockweiler-GNPSK.str`
+* Apodemia_0.9-noGNPSK.str : STRUCTURE-formatted (one-line) file excluding specimens 
+from Grasslands National Park population; same data as in Apodemia_0.9miss.str sans 
+specimens from Grasslands NP, produced via `grep -v grep -v "NPSK" > Apodemia_0.9-noGNPSK.str`
 * Apodemia_0.9miss.str : STRUCTURE-formatted (one-line) file, from JD including 
 loci with up to 10% missing data (4057 loci)
 * Apodemia_filteredVCF_0.9miss.recode.vcf : a VCF file that was precursor to JD 
@@ -32,9 +38,9 @@ identifying portion of individual identifiers (e.g. ArroyoBayo, langei)
 
 ## docs:
 * apo-ms-outline.md : early outline of manuscript
-* apo-ms-to-doc.sh : bash script for converting markdown `apo-ms.md` to a 
+* [**DELETE**] apo-ms-to-doc.sh : bash script for converting markdown `apo-ms.md` to a 
 Word document
-* apo-ms.md : early draft of manuscript
+* [**DELETE**] apo-ms.md : early draft of manuscript
 * apo-pandoc-ref.docx : a Word document to serve as a template for pandoc (called 
 in `apo-ms-to-doc.sh`) when converting `apo-ms.md` to a Word document
 * apo-task-list.md : a task list
