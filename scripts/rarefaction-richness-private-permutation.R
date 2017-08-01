@@ -8,7 +8,9 @@ rm(list = ls())
 ################################################################################
 # Load dependencies
 library("adegenet")
-source(file = "functions/rarefaction.R")
+source(file = "functions/rarefaction-functions.R")
+num.perm <- 1000
+print.freq <- 50
 
 # Load data
 genind.file = "output/genind-object.RData"
@@ -44,8 +46,6 @@ private.sums <- apply(X = private.matrix,
 
 ################################################################################
 # Loop to create distribution of sums
-num.perm <- 1000
-print.freq <- 50
 
 richness.perms <- matrix(data = 0, 
                          nrow = num.perm, 
@@ -106,6 +106,7 @@ for (one.pop in 1:ncol(richness.perms)) {
 sink(file = "output/rarefied-alleles-permutation.txt")
 cat("Permutation tests on allelic richness and private allele counts", "\n", sep = "")
 cat("Number of permutations: ", num.perm, "\n", sep = "")
+cat("Rarefied population size: ", min.size, "\n", sep = "")
 cat("\n***\n", "Allelic richness", "\n", "")
 print(richness.sig)
 cat("\n***\n", "Private alleles", "\n", "")
