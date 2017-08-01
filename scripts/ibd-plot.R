@@ -54,7 +54,7 @@ geo.dist <- log(x = geo.dist, base = 10)
 # these distance matrices have columns corresponding to populations 1 through 
 # n - 1 (where n is the number of populations) and rows corresponding to 
 # populations 2 through n.
-south.pop.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego")
+south.pop.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego", "Dockweiler")
 south.pop.numbers <- localities$pop.number[which(localities$pop.name %in% south.pop.names)]
 dot.colors <- matrix(data = "purple", nrow = nrow(localities) - 1, ncol = nrow(localities) - 1)
 rownames(dot.colors) <- localities$pop.number[2:length(localities$pop.number)]

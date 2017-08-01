@@ -24,12 +24,14 @@ library("hierfstat")
 source(file = "functions/apodemia-functions.R")
 
 # Establish data files
-str.file = "data/Apodemia_0.9-noDockweiler-GNPSK.str"
+str.file = "data/Apodemia_0.9-noGNPSK.str"
+num.inds <- 107 # 102
 genind.out.file = "output/genind-object.RData"
 fst.out.file = "output/pairwise-fst.RData"
 localities.file = "data/Apo_localities.txt"
 localities.out.file = "output/reconciled-localities.RData"
 geo.dist.out.file = "output/pairwise-geo-dist.RData"
+omit.locs <- c("GrasslandsNPSK") # c("Dockweiler", "GrasslandsNPSK")
 
 ################################################################################
 # GENETIC DATA
@@ -38,7 +40,7 @@ geo.dist.out.file = "output/pairwise-geo-dist.RData"
 
 # Read in file
 apo.str.genind <- read.structure(file = str.file,
-                                 n.ind = 102,
+                                 n.ind = num.inds,
                                  n.loc = 4057,
                                  onerowperind = TRUE,
                                  col.lab = 1,
@@ -69,7 +71,7 @@ save(pairwise.fst, file = fst.out.file)
 # Reconcile localities with populations included in STRUCTURE file
 localities <- FormatLocalities(file = localities.file,
                                genind = apo.str.genind, 
-                               omit = c("Dockweiler", "GrasslandsNPSK"))
+                               omit = omit.locs)
 
 # Calculate geographic distance matrix
 geo.dist <- GeoDistances(localities = localities)

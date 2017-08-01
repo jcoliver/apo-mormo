@@ -80,7 +80,7 @@ sink()
 
 ########################################
 # Partial Mantel to see if North-South difference is beyond IBD
-south.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego")
+south.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego", "Dockweiler")
 north.south <- IndicatorMatrix(pop.set = south.names, localities = localities)
 
 ibd.ns <- mantel.partial(xdis = north.south, 
@@ -115,7 +115,7 @@ sink()
 
 ########################################
 # IBD on SOUTHern populations only
-south.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego")
+south.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego", "Dockweiler")
 south.pop.numbers <- localities$pop.number[which(localities$pop.name %in% south.names)]
 
 # Need to extract part of distance matrices
@@ -139,7 +139,7 @@ sink()
 
 ########################################
 # IBD on NORTHern populations only
-south.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego")
+south.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego", "Dockweiler")
 north.pop.numbers <- localities$pop.number[which(!(localities$pop.name %in% south.names))]
 
 # Need to extract part of distance matrices
@@ -164,7 +164,7 @@ sink()
 ########################################
 # IBD on NORTHern populations only, partial Mantel on langei
 # Partial Mantel to see if langei difference is beyond IBD
-south.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego")
+south.names <- c("PointLoma", "WildhorseMeadows", "CampPendleton", "Borrego", "Dockweiler")
 north.pop.numbers <- localities$pop.number[which(!(localities$pop.name %in% south.names))]
 
 # Need to extract part of distance matrices
