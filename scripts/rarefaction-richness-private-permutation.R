@@ -25,7 +25,7 @@ data.list$pop <- factor(apo.str.genind@pop)
 
 ################################################################################
 # Run rarefaction analyses, using smallest population as minimal cutoff
-min.size <- min(table(data.list$pop))
+min.size <- min(table(data.list$pop)) * 2
 rarefied.values <- rarefiedMatrices(data = data.list, 
                                     g = min.size, 
                                     display.progress = TRUE)
