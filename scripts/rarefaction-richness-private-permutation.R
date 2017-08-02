@@ -106,7 +106,7 @@ for (one.pop in 1:ncol(richness.perms)) {
 sink(file = "output/rarefied-alleles-permutation.txt")
 cat("Permutation tests on allelic richness and private allele counts", "\n", sep = "")
 cat("Number of permutations: ", num.perm, "\n", sep = "")
-cat("Rarefied population size: ", min.size, "\n", sep = "")
+cat("Rarefied population size: ", (min.size / 2), " diploid individuals\n", sep = "")
 cat("\n***\n", "Allelic richness", "\n", "")
 print(richness.sig)
 cat("\n***\n", "Private alleles", "\n", "")
