@@ -9,7 +9,7 @@
 # remaning populations. e.g. calculate langei frequences and all remaining non-
 # langei populations
 
-cd ~/Documents/Other\ Work/Apodemia/apo-repo/scripts
+cd ~/Documents/Papers/Apodemia/apo-repo/scripts
 PREFIXFILE="../data/pop-prefixes.txt"
 VCFFILE="../data/Apodemia_filteredVCF_0.9miss.recode.vcf"
 ALLINDS="../data/inds-all.txt"
