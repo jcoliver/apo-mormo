@@ -5,13 +5,38 @@
 # jcoliver@email.arizona.edu
 # 2017-08-28
 
+# Path information
+ALLELEFREQS="../output/private-langei-allele-freqs.txt"
+VCFFILE="../data/Apodemia_filteredVCF_0.9miss.recode.vcf"
+OUTFILE="../output/private-langei-ids.txt"
+
+# Start by grabbing the line from the VCF file that has column headers
+VCFHEADER=$(grep -P 'CHROM\tPOS' $VCFFILE)
+OUTHEAD=${VCFHEADER%QUAL*} # pull out stuff before QUAL
+OUTHEAD=${OUTHEAD#'#'} # drop that leading #
+echo -e $OUTHEAD > $OUTFILE
+
 # Need to read in output/private-langei-allele-freqs.txt, line by line and
-# pull out the value in the first column
+# pull out the value in the first column (skipping the first line)
+readarray POSLINES < $ALLELEFREQS
+LINES=0
+for POSLINE in "${POSLINES[@]}";
+do
+  ((LINES++))
+  if [ $LINES -ne 1 ];
+  then
+    # Pull out value in first column
+    POS=$(echo $POSLINE | cut -d ' ' -f1)
+    # Use that to grep the VCF file for the line we're interested in
+    VCFLINE=$(grep -P 'un\t'${POS} $VCFFILE)
+    KEEP=${VCFLINE%PASS*}
+    KEEP2=${KEEP::-2}
+    echo $KEEP2 >> $OUTFILE
+  fi
+done
 
 # For each column, want to grep on that value for line in VCF file
 # where mynum is the value in the pos column
-grep -P 'un\t'${mynum} data/Apodemia_filteredVCF_0.9miss.recode.vcf 
+# grep -P 'un\t'${mynum} data/Apodemia_filteredVCF_0.9miss.recode.vcf 
 
 # Pull out some number characters(?) from that output
-
-# When using grep, need to use the -P flag to get it to recognize tab \t
