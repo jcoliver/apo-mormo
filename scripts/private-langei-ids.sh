@@ -29,14 +29,10 @@ do
     POS=$(echo $POSLINE | cut -d ' ' -f1)
     # Use that to grep the VCF file for the line we're interested in
     VCFLINE=$(grep -P 'un\t'${POS} $VCFFILE)
+    # Drop everything after "PASS"
     KEEP=${VCFLINE%PASS*}
+    # And kick out the last two characters (" .")
     KEEP2=${KEEP::-2}
     echo $KEEP2 >> $OUTFILE
   fi
 done
-
-# For each column, want to grep on that value for line in VCF file
-# where mynum is the value in the pos column
-# grep -P 'un\t'${mynum} data/Apodemia_filteredVCF_0.9miss.recode.vcf 
-
-# Pull out some number characters(?) from that output
