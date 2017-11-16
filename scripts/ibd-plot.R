@@ -98,14 +98,19 @@ for (i in 1:nrow(dot.colors)) {
 dot.tri <- lower.tri(x = dot.colors, diag = TRUE)
 dot.colors.lower <- dot.colors[dot.tri]
 dot.shapes.lower <- dot.shapes[dot.tri]
+font.size <- 1.4
 
 # Plot to a file
 pdf(file = paste0("output/Apo-ibd-plot.pdf"), useDingbats = FALSE)
+par(mar = c(5, 5, 4, 2) + 0.1) # mgp = c(2, 1, 0)
   plot(x = geo.dist, 
        y = p.fst, 
        col = "black", 
-       # pch = 21, 
        pch = dot.shapes.lower,
+       cex = 1.2, 
+       cex.axis = font.size,
+       cex.lab = font.size * 1.4,
+       las = 1, # make all axis values horizontal
        bg = dot.colors.lower, 
        xlab = "Log(distance)", 
        ylab = "Fst/1 - Fst")
@@ -115,7 +120,8 @@ pdf(file = paste0("output/Apo-ibd-plot.pdf"), useDingbats = FALSE)
          col = "black", 
          pt.bg = c("white", "black", "red"),
          pch = 21,
-         cex = 0.8)
+         cex = font.size)
+par(mar = c(5, 4, 4, 2) + 0.1) # restore default
 dev.off()
 
 ################################################################################
@@ -158,6 +164,7 @@ pdf(file = paste0("output/Apo-ibd-plot-langei.pdf"), useDingbats = FALSE)
        y = p.fst, 
        col = "black", 
        pch = 21, 
+       cex = font.size,
        bg = langei.colors.lower, 
        xlab = "Log(distance)", 
        ylab = "Fst/1 - Fst")
